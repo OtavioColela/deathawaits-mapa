@@ -43,8 +43,28 @@ const MAPA_CONFIG = {
   },
 
   /* ------------------------------------------------------------------
+     IMAGEM DO MAPA (render real do servidor, visto de cima)
+     largura/altura = tamanho em pixels do arquivo original (define a proporção).
+     blocosPorPixel = escala para a "distância aproximada" da rota.
+       SUPOSIÇÃO: 1 pixel = 1 bloco (padrão de renders tipo uNmINeD/Chunky).
+       Se o render foi reduzido (ex.: 1 px = 4 blocos), troque aqui.
+       Use null para esconder o número de blocos.
+     ------------------------------------------------------------------ */
+  mapa: {
+    imagemGrande: "mapa-real.jpg", // aberta em tela cheia (resolução original)
+    largura: 1833,
+    altura: 2040,
+    blocosPorPixel: 1
+  },
+
+  /* ------------------------------------------------------------------
      LOCAIS DO MAPA
-     x / y = posição no mapa ilustrativo (0–1000 na horizontal, 0–620 na vertical).
+     x / y = posição em PORCENTAGEM da imagem do mapa (0–100), medida a partir
+     do canto superior esquerdo. Ex.: x: 50, y: 50 = centro da imagem.
+     ATENÇÃO: as posições abaixo são PALPITES visuais (não sabemos qual lugar
+     real é qual). Para corrigir: abra a página com ?calibrar=1 no fim do
+     endereço (ex.: index.html?calibrar=1#mapa), clique no lugar certo do mapa
+     e cole aqui o "x: …, y: …" que foi copiado.
      risco: "baixo" | "medio" | "alto" | "extremo"
      loot:  "comum" | "raro" | "militar"
      dominio: texto do clã. Enquanto for placeholder, deixe dominioExemplo: true
@@ -53,31 +73,31 @@ const MAPA_CONFIG = {
      o que realmente acontece no servidor.
      ------------------------------------------------------------------ */
   locais: [
-    { id: "safezone", n: "01", nome: "Safezone", img: "safezone.jpg", x: 500, y: 318,
+    { id: "safezone", n: "01", nome: "Safezone", img: "safezone.jpg", x: 84.1, y: 42.5, // palpite: forte murado com praça redonda no centro (leste)
       risco: "baixo", loot: "comum", dominio: "Ninguém · zona neutra", dominioExemplo: false,
       alt: "Safezone: praça com caminhões do exército, helicópteros e um prédio do governo ao fundo",
       lore: "Os últimos caminhões do exército ainda estão estacionados na praça. Aqui dentro dá pra respirar. Lá fora, ninguém vai te esperar." },
-    { id: "base", n: "02", nome: "Base militar", img: "base-hazmat.jpg", x: 850, y: 108,
+    { id: "base", n: "02", nome: "Base militar", img: "base-hazmat.jpg", x: 10.9, y: 68.4, // palpite: base aérea no litoral oeste, hangar com aviões
       risco: "extremo", loot: "militar", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
       alt: "Instalação militar com helicóptero, prédios de concreto e zumbis com roupas hazmat laranja andando pela pista",
       lore: "O helicóptero de evacuação nunca decolou. A tripulação ainda está na pista, de roupa hazmat e com fome." },
-    { id: "posto", n: "03", nome: "Posto destruído", img: "ruinas-militares.jpg", x: 470, y: 535,
+    { id: "posto", n: "03", nome: "Posto destruído", img: "ruinas-militares.jpg", x: 30.7, y: 17.2, // palpite: complexo vermelho murado no noroeste, perto da pista
       risco: "alto", loot: "militar", dominio: "Em disputa", dominioExemplo: true,
       alt: "Vista do alto de uma fortificação militar em ruínas, com jipes, caixas de suprimentos e um helicóptero caído",
       lore: "Caixas de suprimento lacradas no meio dos escombros. Alguém derrubou aquele helicóptero, e ainda pode estar por perto." },
-    { id: "centro", n: "04", nome: "Centro", img: "cidade.jpg", x: 690, y: 250,
+    { id: "centro", n: "04", nome: "Centro", img: "cidade.jpg", x: 68.3, y: 16.5, // palpite: maior cidade, densa, no porto do rio (norte)
       risco: "alto", loot: "raro", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
       alt: "Centro de uma cidade com prédios altos, ruas asfaltadas e árvores",
       lore: "Cada janela é um atirador em potencial. Os andares de cima ainda não foram saqueados, porque quem sobe nem sempre desce." },
-    { id: "bairros", n: "05", nome: "Bairros", img: "bairros.jpg", x: 725, y: 476,
+    { id: "bairros", n: "05", nome: "Bairros", img: "bairros.jpg", x: 59.6, y: 60.2, // palpite: cidadezinha em grade de casas (centro-sul)
       risco: "medio", loot: "comum", dominio: "Sem dono", dominioExemplo: true,
       alt: "Bairro com dezenas de casas, um viaduto e um arranha-céu ao fundo",
       lore: "Dezenas de casas, cada uma com uma geladeira, um armário e um morador que não saiu a tempo. Bom lugar pra começar." },
-    { id: "castelo", n: "06", nome: "Castelo", img: "castelo.jpg", x: 250, y: 400,
+    { id: "castelo", n: "06", nome: "Castelo", img: "castelo.jpg", x: 60.6, y: 6.7, // palpite: construção cercada por um fosso/anel de água (norte)
       risco: "medio", loot: "raro", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
       alt: "Castelo de pedra numa ilha cercada por um rio, no meio de uma floresta de pinheiros",
       lore: "Uma ponte, uma ilha e muralhas de pedra. O melhor esconderijo do mapa, se você conseguir tirar quem já está lá dentro." },
-    { id: "floresta", n: "07", nome: "Floresta e cânion", img: "floresta.jpg", x: 180, y: 158,
+    { id: "floresta", n: "07", nome: "Floresta e cânion", img: "floresta.jpg", x: 40.5, y: 30, // palpite: mata fechada na margem oeste do rio grande
       risco: "baixo", loot: "comum", dominio: "Sem dono", dominioExemplo: true,
       alt: "Rio correndo num cânion de pedra no meio de uma floresta de pinheiros",
       lore: "Pinheiros fechados e um rio no fundo do cânion. Ninguém te vê aqui, mas você também não vê quem está te seguindo." }
@@ -94,6 +114,12 @@ const MAPA_CONFIG = {
   const C = MAPA_CONFIG;
   const root = document.getElementById("mapa");
   if (!root) return;
+  // o overlay usa 1000 unidades de largura e MH de altura (mesma proporção da imagem)
+  const MI = C.mapa || { largura: 1000, altura: 620 };
+  const MH = Math.round(1000 * MI.altura / MI.largura * 10) / 10;
+  const LINHAS = 11, LH = MH / LINHAS; // grade: colunas A–J × linhas 1–11
+  C.locais.forEach((l) => { if (l.px == null) { l.px = l.x; l.py = l.y; } l.x = l.px * 10; l.y = l.py * MH / 100; });
+  const pctX = (mx) => mx / 10 + "%", pctY = (my) => my / MH * 100 + "%";
 
   const RISCO = { baixo: ["Baixo", 1], medio: ["Médio", 2], alto: ["Alto", 3], extremo: ["Extremo", 4] };
   const LOOT = { comum: "Comum", raro: "Raro", militar: "Militar" };
@@ -103,7 +129,7 @@ const MAPA_CONFIG = {
   const reduz = window.matchMedia("(prefers-reduced-motion: reduce)");
   const mobile = window.matchMedia("(max-width: 820px)");
   const hoverOk = window.matchMedia("(hover: hover) and (pointer: fine)");
-  const quadrante = (l) => "ABCDEFGHIJ"[Math.min(9, Math.floor(l.x / 100))] + (Math.floor(l.y / 100) + 1);
+  const quadrante = (l) => "ABCDEFGHIJ"[Math.min(9, Math.max(0, Math.floor(l.x / 100)))] + Math.min(LINHAS, Math.max(1, Math.floor(l.y / LH) + 1));
   const img = (f) => C.pastaImagens + f;
   // animações só para quem não pediu "reduzir movimento"; sem JS nada fica escondido
   const anima = () => !reduz.matches;
@@ -129,7 +155,7 @@ const MAPA_CONFIG = {
     const b = document.createElement("button");
     b.style.setProperty("--d", (0.7 + i * 0.16).toFixed(2) + "s");
     b.type = "button"; b.className = "mp-marker"; b.dataset.id = l.id; b.dataset.risco = l.risco;
-    b.style.left = (l.x / 10) + "%"; b.style.top = (l.y / 6.2) + "%";
+    b.style.left = pctX(l.x); b.style.top = pctY(l.y);
     b.setAttribute("aria-pressed", "false"); b.setAttribute("aria-controls", "mp-dossie");
     b.setAttribute("aria-label", `${l.nome}: risco ${RISCO[l.risco][0]}, loot ${LOOT[l.loot]}`);
     b.innerHTML = `<span class="mp-ring" aria-hidden="true"></span><span class="mp-lock" aria-hidden="true"></span><span class="mp-pin" aria-hidden="true"></span><span class="mp-flash" aria-hidden="true"></span><span class="mp-tag" aria-hidden="true"><b>${l.n}</b>${esc(l.nome)}</span>`;
@@ -387,10 +413,27 @@ const MAPA_CONFIG = {
   const rnd = (a, b) => a + Math.random() * (b - a);
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   let W = stage.offsetWidth || 1, H = stage.offsetHeight || 1;
-  const px = (mx, my) => [mx / 1000 * W, my / 620 * H];
+  const px = (mx, my) => [mx / 1000 * W, my / MH * H];
+
+  /* ---------- camadas que dependem das posições (zonas, radar) ---------- */
+  const zonasBox = $(".mp-zonas");
+  const RAIO = { extremo: 95, alto: 72 }; // raio das zonas de perigo, em unidades (1000 = largura)
+  function circulo(el, x, y, r) { el.style.left = pctX(x - r); el.style.top = pctY(y - r); el.style.width = pctX(2 * r); el.style.height = pctY(2 * r); }
+  if (zonasBox) {
+    C.locais.forEach((l) => {
+      if (RAIO[l.risco]) { const z = document.createElement("i"); z.className = "mp-perigo"; z.dataset.id = l.id; z.dataset.risco = l.risco; circulo(z, l.x, l.y, RAIO[l.risco]); zonasBox.appendChild(z); }
+    });
+    ["mp-escudo", "mp-escudo mp-escudo2"].forEach((c) => { const z = document.createElement("i"); z.className = c; z.dataset.id = SAFE.id; circulo(z, SAFE.x, SAFE.y, 55); zonasBox.appendChild(z); });
+  }
+  $$(".mp-alcance circle").forEach((c) => { c.setAttribute("cx", SAFE.x); c.setAttribute("cy", SAFE.y); });
+  const sweepEl = $(".mp-sweep"); if (sweepEl) { sweepEl.style.left = pctX(SAFE.x); sweepEl.style.top = pctY(SAFE.y); }
+  canvas.style.setProperty("--sx", pctX(SAFE.x)); canvas.style.setProperty("--sy", pctY(SAFE.y));
 
   /* ---------- zoom / arrasto ---------- */
   const view = { z: 1, tx: 0, ty: 0 };
+  // ao aproximar no celular, pede a versão grande da imagem (o navegador troca sozinho)
+  const fonteImg = $(".mp-img source"); let imgGrande = false;
+  const pedeImgGrande = () => { if (!imgGrande && fonteImg && view.z > 1.2) { imgGrande = true; fonteImg.sizes = "1800px"; } };
   const ZMAX = 3;
   const btnIn = $(".mp-zin"), btnOut = $(".mp-zout"), btnReset = $(".mp-zreset"), btnMover = $(".mp-mover");
   function clampView() {
@@ -402,6 +445,7 @@ const MAPA_CONFIG = {
     stage.style.transform = view.z === 1 && !view.tx && !view.ty ? "" : `translate(${view.tx.toFixed(1)}px, ${view.ty.toFixed(1)}px) scale(${view.z.toFixed(4)})`;
     stage.style.setProperty("--iz", Math.pow(view.z, -0.8).toFixed(3));
     const zoom = view.z > 1.01;
+    if (zoom) pedeImgGrande();
     mapaEl.classList.toggle("is-zoom", zoom);
     if (!zoom) mapaEl.classList.remove("is-foco");
     btnOut.disabled = !zoom; btnReset.disabled = !zoom; btnIn.disabled = view.z >= ZMAX - 0.01;
@@ -499,12 +543,12 @@ const MAPA_CONFIG = {
 
   /* ---------- coordenadas no cabeçalho ---------- */
   const coordEl = $(".mp-coord");
-  const coordTxt = (mx, my) => `Grade ${quadrante({ x: clamp(mx, 0, 999), y: clamp(my, 0, 599) })} · ${String(Math.round(mx)).padStart(3, "0")} / ${String(Math.round(my)).padStart(3, "0")}`;
+  const coordTxt = (mx, my) => `Grade ${quadrante({ x: clamp(mx, 0, 999), y: clamp(my, 0, MH - 1) })} · ${String(Math.round(mx)).padStart(3, "0")} / ${String(Math.round(my)).padStart(3, "0")}`;
   function coord(e) {
     if (!coordEl || e.pointerType === "touch") return;
     const r = canvas.getBoundingClientRect();
-    const mx = (e.clientX - r.left - view.tx) / view.z / W * 1000, my = (e.clientY - r.top - view.ty) / view.z / H * 620;
-    if (mx >= 0 && my >= 0 && mx <= 1000 && my <= 620) coordEl.textContent = coordTxt(mx, my);
+    const mx = (e.clientX - r.left - view.tx) / view.z / W * 1000, my = (e.clientY - r.top - view.ty) / view.z / H * MH;
+    if (mx >= 0 && my >= 0 && mx <= 1000 && my <= MH) coordEl.textContent = coordTxt(mx, my);
   }
   canvas.addEventListener("mouseleave", () => { if (coordEl) coordEl.textContent = "Grade — · 7 locais"; });
 
@@ -521,10 +565,12 @@ const MAPA_CONFIG = {
     const d = `M${x0} ${y0}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x1} ${y1}`;
     [rotaLinha, rotaGlow, rotaMask].forEach((p) => p.setAttribute("d", d));
     rotaFim.setAttribute("cx", x1); rotaFim.setAttribute("cy", y1);
-    const blocos = Math.max(50, Math.round(len * 2.4 / 50) * 50); // escala ILUSTRATIVA (o mapa é fora de escala)
-    rotaLbl.innerHTML = `~${blocos.toLocaleString("pt-BR")} blocos<small>ilustrativo</small>`;
+    // distância em linha reta, convertida para pixels da imagem e depois para blocos (escala em MAPA_CONFIG.mapa)
+    const bpp = MI.blocosPorPixel;
+    if (bpp) { const blocos = Math.max(10, Math.round(len * MI.largura / 1000 * bpp / 10) * 10); rotaLbl.innerHTML = `~${blocos.toLocaleString("pt-BR")} blocos<small>distância aproximada</small>`; }
+    else rotaLbl.innerHTML = `Rota a partir da safezone<small>distância aproximada</small>`;
     const lx = 0.25 * x0 + 0.5 * cx + 0.25 * x1, ly = 0.25 * y0 + 0.5 * cy + 0.25 * y1;
-    rotaLbl.style.left = lx / 10 + "%"; rotaLbl.style.top = ly / 6.2 + "%";
+    rotaLbl.style.left = pctX(lx); rotaLbl.style.top = pctY(ly);
     rotaG.classList.add("is-on"); rotaLbl.classList.add("is-on");
     if (anima() && rotaMask.animate) rotaMask.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 650, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
     else rotaMask.style.strokeDashoffset = "0";
@@ -561,6 +607,7 @@ const MAPA_CONFIG = {
     linhaRaf = requestAnimationFrame(f);
   }
   addEventListener("resize", () => seguirLinha(200));
+  addEventListener("scroll", () => { if (link && link.classList.contains("is-on")) seguirLinha(0); }, { passive: true }); // dossiê é sticky
 
   /* ---------- filtro também apaga zonas e rota ---------- */
   $(".mp-filtro").addEventListener("click", () => {
@@ -581,6 +628,48 @@ const MAPA_CONFIG = {
     const on = !mapaEl.classList.contains("is-nv");
     mapaEl.classList.toggle("is-nv", on); nvBtn.setAttribute("aria-pressed", String(on));
   });
+
+  /* ---------- mapa em tela cheia (resolução original, carregada só ao abrir) ---------- */
+  const btnFull = $(".mp-full");
+  if (btnFull) btnFull.addEventListener("click", () => {
+    if (!window.DALightbox) { window.open(MI.imagemGrande || "mapa-real.jpg", "_blank", "noopener"); return; }
+    window.DALightbox.open([{ src: MI.imagemGrande || "mapa-real.jpg", alt: "Mapa real do servidor DeathAwaits em resolução original", caption: "Mapa do servidor · clique na imagem para ver em tamanho real", zoom: true }], 0, $(".mp-img img"));
+  });
+
+  /* ---------- calibração: index.html?calibrar=1 ----------
+     Mostra uma mira com a posição em % e, ao clicar, copia "x: …, y: …"
+     para colar em MAPA_CONFIG.locais. Fica escondido para os visitantes. */
+  if (/[?&]calibrar=1\b/.test(location.search)) {
+    mapaEl.classList.add("is-calibrar");
+    const cal = document.createElement("div"); cal.className = "mp-cal"; cal.setAttribute("aria-hidden", "true");
+    cal.innerHTML = '<i class="h"></i><i class="v"></i><b></b>';
+    const calLbl = cal.querySelector("b");
+    const calInfo = document.createElement("div"); calInfo.className = "mp-cal-info";
+    calInfo.innerHTML = "<b>Modo calibrar</b> · clique no lugar certo para copiar a posição";
+    const toast = document.createElement("div"); toast.className = "mp-cal-toast"; toast.setAttribute("role", "status");
+    canvas.append(cal, calInfo, toast);
+    const pos = (e) => {
+      const r = stage.getBoundingClientRect(); // já inclui zoom/arrasto
+      return [clamp((e.clientX - r.left) / r.width * 100, 0, 100), clamp((e.clientY - r.top) / r.height * 100, 0, 100)];
+    };
+    const f1 = (n) => n.toFixed(1);
+    canvas.addEventListener("pointermove", (e) => {
+      const c = canvas.getBoundingClientRect(), [x, y] = pos(e);
+      cal.style.setProperty("--cx", (e.clientX - c.left).toFixed(1) + "px"); cal.style.setProperty("--cy", (e.clientY - c.top).toFixed(1) + "px");
+      calLbl.textContent = `x ${f1(x)} · y ${f1(y)}`; cal.classList.add("is-on");
+    });
+    canvas.addEventListener("pointerleave", () => cal.classList.remove("is-on"));
+    let toastT = 0;
+    canvas.addEventListener("click", (e) => {
+      if (arrastou || e.target.closest(".mp-ctrl")) return;
+      const [x, y] = pos(e), txt = `x: ${f1(x)}, y: ${f1(y)}`;
+      console.info("[calibrar]", txt);
+      const ok = () => { toast.textContent = `Copiado: ${txt}`; }, falha = () => { toast.textContent = `Posição: ${txt} (copie à mão)`; };
+      toast.textContent = `Posição: ${txt}`;
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(ok, falha); else falha();
+      toast.classList.add("is-on"); clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove("is-on"), 2600);
+    });
+  }
 
   hooks.linha = atualizaLinha;
   hooks.rota = rota;
@@ -604,17 +693,17 @@ const MAPA_CONFIG = {
   // helicóptero: laço entre a safezone e a base militar
   const BASE = LOC.base || SAFE;
   const hc = [(SAFE.x + BASE.x) / 2, (SAFE.y + BASE.y) / 2], hv = [BASE.x - SAFE.x, BASE.y - SAFE.y], hl = Math.hypot(hv[0], hv[1]) || 1;
-  const hu = [hv[0] / hl, hv[1] / hl], hn = [-hu[1], hu[0]], HA = hl / 2 + 30, HB = 58;
+  const hu = [hv[0] / hl, hv[1] / hl], hn = [-hu[1], hu[0]], HA = hl / 2 + 30, HB = Math.max(58, hl * 0.12);
   function poeEnt(el, mx, my, ang, dx = 0, dy = 0) {
     const [x, y] = px(mx, my);
     el.style.transform = `translate(${(x + dx).toFixed(1)}px, ${(y + dy).toFixed(1)}px) translate(-50%, -50%) rotate(${ang.toFixed(1)}deg)`;
   }
   // veículos nas estradas (vão e voltam)
-  const carros = ["mp-v1", "mp-v2", "mp-v3", "mp-v4"].map((id, i) => {
+  const carros = ["mp-v1", "mp-v2", "mp-v3", "mp-v4", "mp-v5"].map((id, i) => {
     const path = document.getElementById(id); if (!path || !path.getTotalLength) return null;
     const el = document.createElement("i"); el.className = "mp-carro"; carrosBox.appendChild(el);
     const len = path.getTotalLength();
-    return { path, len, el, s: rnd(0, len), dir: i % 2 ? -1 : 1, v: rnd(26, 40), espera: 0 };
+    return { path, len, el, s: rnd(0, len), dir: i % 2 ? -1 : 1, v: rnd(22, 34), espera: 0 };
   }).filter(Boolean);
   // hordas: mais frequentes perto das zonas Extremo/Alto
   const PESO = { extremo: 6, alto: 3, medio: 1.4, baixo: 0.5 };
@@ -624,9 +713,9 @@ const MAPA_CONFIG = {
     if (blips.childElementCount >= 7) return;
     let r = Math.random() * somaPeso, l = zonasBlip[0][0];
     for (const [z, w] of zonasBlip) { if ((r -= w) <= 0) { l = z; break; } }
-    const x = clamp(l.x + rnd(-75, 75), 20, 980), y = clamp(l.y + rnd(-60, 60), 20, 600);
+    const x = clamp(l.x + rnd(-75, 75), 20, 980), y = clamp(l.y + rnd(-65, 65), 20, MH - 20);
     const el = document.createElement("i"); el.className = "mp-blip";
-    el.style.left = x / 10 + "%"; el.style.top = y / 6.2 + "%";
+    el.style.left = pctX(x); el.style.top = pctY(y);
     el.style.setProperty("--wx", (rnd(-1, 1) * W * 0.03).toFixed(1) + "px"); el.style.setProperty("--wy", (rnd(-1, 1) * W * 0.02).toFixed(1) + "px");
     if (Math.random() < 0.35) el.innerHTML = "<b>contato</b>";
     el.addEventListener("animationend", (e) => { if (e.target === el) el.remove(); });
@@ -635,21 +724,21 @@ const MAPA_CONFIG = {
   // airdrop: avião cruza o mapa e solta uma caixa num ponto aleatório (~a cada 20 s)
   let voo = null;
   function novoVoo(t) {
-    const daEsq = Math.random() < 0.5, y0 = rnd(90, 530), y1 = clamp(y0 + rnd(-110, 110), 60, 560);
-    voo = { t0: t, dur: 7000, x0: daEsq ? -70 : 1070, x1: daEsq ? 1070 : -70, y0, y1, f: rnd(0.32, 0.68), solto: false };
+    const daEsq = Math.random() < 0.5, y0 = rnd(110, MH - 110), y1 = clamp(y0 + rnd(-160, 160), 80, MH - 80);
+    voo = { t0: t, dur: 8000, x0: daEsq ? -70 : 1070, x1: daEsq ? 1070 : -70, y0, y1, f: rnd(0.32, 0.68), solto: false };
     voo.ang = Math.atan2(y1 - y0, voo.x1 - voo.x0) * 180 / Math.PI;
     aviao.classList.add("is-on"); aviaoSh.classList.add("is-on");
   }
   function soltaCaixa(x, y) {
     const el = document.createElement("span"); el.className = "mp-drop";
-    el.style.left = x / 10 + "%"; el.style.top = y / 6.2 + "%";
+    el.style.left = pctX(x); el.style.top = pctY(y);
     el.innerHTML = '<i class="mp-drop-sh"></i><i class="mp-drop-pulse"></i><span class="mp-drop-box"><i class="mp-drop-chute"></i></span><b class="mp-drop-lbl">Airdrop</b>';
     el.addEventListener("animationend", (e) => { if (e.target === el) el.remove(); });
     drops.appendChild(el);
   }
 
   // evita soltar a caixa em cima de um marcador/rótulo (mantém o "AIRDROP" legível)
-  const longeDosLocais = (x, y) => x > 60 && x < 940 && y > 50 && y < 570 && C.locais.every((l) => Math.hypot(l.x - x, (l.y + 30) - y) > 105);
+  const longeDosLocais = (x, y) => x > 60 && x < 940 && y > 60 && y < MH - 60 && C.locais.every((l) => Math.hypot(l.x - x, (l.y + 30) - y) > 105);
   let live = false, raf = 0, ult = 0, relogio = 0, proxBlip = 1200, proxDrop = 4500;
   function quadro(t) {
     const dt = Math.min(64, t - (ult || t)); ult = t; relogio += dt;
@@ -658,7 +747,7 @@ const MAPA_CONFIG = {
     sweep.style.transform = `translate(-50%, -50%) rotate(${a1.toFixed(2)}deg)`;
     for (const { l, b } of alvos) if (passou(a0, a1, b)) pingMarker(l.id);
     // helicóptero
-    const th = relogio / 26000 * Math.PI * 2, c = Math.cos(th), s = Math.sin(th);
+    const th = relogio / 34000 * Math.PI * 2, c = Math.cos(th), s = Math.sin(th);
     const hx = hc[0] + hu[0] * HA * c + hn[0] * HB * s, hy = hc[1] + hu[1] * HA * c + hn[1] * HB * s;
     const dxh = -hu[0] * HA * s + hn[0] * HB * c, dyh = -hu[1] * HA * s + hn[1] * HB * c, ah = Math.atan2(dyh, dxh) * 180 / Math.PI;
     poeEnt(heli, hx, hy, ah); poeEnt(heliSh, hx, hy, ah, W * 0.014, W * 0.02);
@@ -677,7 +766,7 @@ const MAPA_CONFIG = {
     if (voo) {
       const k = (relogio - voo.t0) / voo.dur, x = voo.x0 + (voo.x1 - voo.x0) * k, y = voo.y0 + (voo.y1 - voo.y0) * k;
       poeEnt(aviao, x, y, voo.ang); poeEnt(aviaoSh, x, y, voo.ang, W * 0.03, W * 0.045);
-      if (!voo.solto && k >= voo.f && (k > 0.9 || longeDosLocais(x, y))) { voo.solto = true; soltaCaixa(clamp(x, 60, 940), clamp(y, 50, 570)); }
+      if (!voo.solto && k >= voo.f && (k > 0.9 || longeDosLocais(x, y))) { voo.solto = true; soltaCaixa(clamp(x, 60, 940), clamp(y, 60, MH - 60)); }
       if (k >= 1) { aviao.classList.remove("is-on"); aviaoSh.classList.remove("is-on"); proxDrop = voo.t0 + 20000; voo = null; }
     }
     raf = requestAnimationFrame(quadro);

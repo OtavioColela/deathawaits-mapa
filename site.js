@@ -266,6 +266,7 @@
     idx = (i + lista.length) % lista.length; const it = lista[idx];
     lbImg.src = it.src; lbImg.alt = it.alt || ""; lbCap.textContent = it.caption || it.alt || ""; lbCount.textContent = `Registro ${idx + 1} / ${lista.length}`;
     $(".da-lb-prev").hidden = $(".da-lb-next").hidden = lista.length < 2;
+    lb.classList.remove("is-1x1"); lb.classList.toggle("is-zoomavel", !!it.zoom); lbImg.title = it.zoom ? "Clique para ver em tamanho real" : "";
     if (dir && anima()) { lbImg.style.setProperty("--sx", dir * 40 + "px"); lbImg.classList.remove("is-swap"); void lbImg.offsetWidth; lbImg.classList.add("is-swap"); }
   }
   function abre(items, i = 0, fromEl) {
@@ -287,10 +288,17 @@
   function fecha() {
     if (!lb.classList.contains("is-open")) return;
     lb.classList.remove("is-shown");
-    setTimeout(() => { lb.classList.remove("is-open"); lb.hidden = true; d.body.style.overflow = ""; pedeScroll(); }, anima() ? 280 : 0);
+    setTimeout(() => { lb.classList.remove("is-open", "is-1x1"); lb.hidden = true; d.body.style.overflow = ""; pedeScroll(); }, anima() ? 280 : 0);
     if (voltaFoco) voltaFoco.focus({ preventScroll: true });
   }
   window.DALightbox = { open: abre, close: fecha };
+  // itens com zoom:true (mapa): clique alterna entre "cabe na tela" e tamanho real com rolagem
+  lbImg.addEventListener("click", (e) => {
+    if (!lb.classList.contains("is-zoomavel")) return;
+    const st = $(".da-lb-stage"), r = lbImg.getBoundingClientRect(), fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+    const on = lb.classList.toggle("is-1x1"); lbImg.title = on ? "Clique para caber na tela" : "Clique para ver em tamanho real";
+    if (on) { st.scrollLeft = fx * lbImg.offsetWidth - st.clientWidth / 2; st.scrollTop = fy * lbImg.offsetHeight - st.clientHeight / 2; }
+  });
   $(".da-lb-close").addEventListener("click", fecha);
   $(".da-lb-bg").addEventListener("click", fecha);
   $(".da-lb-prev").addEventListener("click", () => mostra(idx - 1, -1));

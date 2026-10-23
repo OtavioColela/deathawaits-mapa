@@ -526,7 +526,7 @@
 .mp-stage.is-ease .mp-route-lbl { transition: transform .85s cubic-bezier(.22,.8,.2,1), opacity .3s; }
 .mp-zonas, .mp-fx { position: absolute; inset: 0; pointer-events: none; }
 .mp-zonas i, .mp-zonas span, .mp-fx i, .mp-fx span, .mp-fx b { position: absolute; display: block; }
-.mp-ent svg, .mp-arv svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.mp-ent svg { width: 100%; height: 100%; display: block; overflow: visible; }
 
 /* pausa tudo quando o mapa não está na tela / aba escondida */
 .mp-anim .mp-mapa:not(.is-live) .mp-canvas *,
@@ -537,20 +537,6 @@
 .mp-anim .mp-fx, .mp-anim .mp-zonas, .mp-anim .mp-alcance { opacity: 0; transition: opacity 1.2s ease; }
 .mp-anim .mp-mapa.is-vivo :is(.mp-fx, .mp-zonas) { opacity: 1; }
 .mp-anim .mp-mapa.is-vivo .mp-alcance { opacity: 1; }
-
-/* rio: correnteza em duas velocidades */
-.mp-flow2 { stroke-width: 4; stroke-dasharray: 26 60; opacity: .55; animation-duration: 5.5s; }
-.mp-anim .mp-mapa.is-in .mp-flow2 { opacity: .55; }
-/* lago: ondas em volta da ilha + brilhos */
-.mp-onda { border-radius: 50%; border: 1.5px solid var(--mp-water-hi); opacity: 0; animation: mp-onda 4.8s ease-out var(--od, 0s) infinite; }
-.mp-brilho { height: 2px; border-radius: 2px; background: var(--mp-water-hi); opacity: 0; animation: mp-brilho 4.5s ease-in-out var(--bd, 0s) infinite; }
-@keyframes mp-onda { 0% { opacity: .75; transform: scale(1); } 100% { opacity: 0; transform: scale(1.75); } }
-@keyframes mp-brilho { 0%, 100% { opacity: 0; transform: scaleX(.4); } 50% { opacity: .9; transform: scaleX(1); } }
-
-/* floresta: árvores balançando */
-.mp-arv { width: 3.2%; aspect-ratio: 32 / 26; fill: var(--mp-tree); transform-origin: 50% 100%; animation: mp-sway var(--sd, 4s) ease-in-out var(--sdl, 0s) infinite alternate; }
-.mp-arv svg { opacity: .95; }
-@keyframes mp-sway { from { transform: rotate(-3deg) skewX(2deg); } to { transform: rotate(3deg) skewX(-2deg); } }
 
 /* zonas de perigo + escudo da safezone */
 .mp-perigo { --z: var(--mp-alto); border-radius: 50%; border: 1.5px dashed color-mix(in srgb, var(--z) 70%, transparent);
@@ -699,7 +685,6 @@
 @media (max-width: 520px) {
   .mp-mapa-f span.mp-f-mob { display: inline; }
   .mp-ctrl { left: 6px; bottom: 6px; } .mp-ctrl button { min-width: 30px; height: 30px; font-size: 16px; }
-  .mp-arv { width: 4%; }
 }
 @media (hover: none) { .mp-canvas { cursor: default; } }
 
@@ -712,3 +697,51 @@
 }
 .mp-vias path { fill: none; stroke: none; }
 .mp-blip b, .mp-drop-lbl { transform-origin: 0 50%; scale: var(--iz, 1); }
+
+/* =====================================================================
+   v5 · MAPA REAL (imagem do servidor + camada SVG por cima)
+   A imagem e o SVG ficam dentro de .mp-stage, que tem exatamente a proporção
+   da imagem (1833 × 2040). Marcadores e efeitos usam % do stage, então
+   acompanham a imagem em qualquer tamanho e zoom.
+   ===================================================================== */
+#mapa#mapa { --mp-nv-filter: grayscale(1) sepia(1) hue-rotate(52deg) saturate(3.2) brightness(1.18) contrast(1.18); }
+@media (min-width: 821px) { .mp-grid { grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr); } }
+.mp-canvas { aspect-ratio: 1833 / 2040; background: #1d2a17; }
+.mp-img, .mp-img img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.mp-img img { object-fit: fill; -webkit-user-drag: none; user-select: none; pointer-events: none; }
+.mp-anim .mp-img { opacity: 0; transform: scale(1.03); transition: opacity .9s ease, transform 1.4s cubic-bezier(.2,.7,.2,1); }
+.mp-anim .mp-mapa.is-in .mp-img { opacity: 1; transform: none; }
+/* radar da intro sai da safezone */
+.mp-radar { left: var(--sx, 50%); top: var(--sy, 50%); }
+/* grade A–J × 1–11 + rosa dos ventos */
+.mp-g-lines path { stroke: #fff; stroke-width: 1; opacity: .16; fill: none; }
+.mp-g-lbl text { font: 600 13px var(--font-mono); fill: #fff; text-anchor: middle; paint-order: stroke; stroke: rgba(10, 14, 8, .75); stroke-width: 3px; opacity: .85; }
+.mp-rosa circle { fill: rgba(241, 236, 217, .9); stroke: #14170f; stroke-width: 1.2; }
+.mp-rosa .n { fill: var(--blood); } .mp-rosa .s { fill: #14170f; opacity: .4; }
+.mp-rosa text { font: 600 12px var(--font-mono); fill: #fff; text-anchor: middle; paint-order: stroke; stroke: rgba(10, 14, 8, .75); stroke-width: 3px; }
+/* sobre a foto, contraste extra para o que é desenhado */
+.mp-route-glow { stroke: #f1ecd9; opacity: .9; }
+.mp-route-line { stroke: #14170f; }
+.mp-route-end { stroke: #f1ecd9; stroke-width: 2.5; }
+.mp-alcance circle { stroke: #d9f2b4; opacity: .45; }
+.mp-carro { background: #f1ecd9; box-shadow: 0 0 0 1.5px #14170f; }
+.mp-heli, .mp-aviao { filter: drop-shadow(0 0 1px rgba(241, 236, 217, .9)); }
+.mp-nuvem { background: radial-gradient(closest-side, rgba(10, 14, 8, .22), transparent); }
+.mp-nuvem.n3 { background: radial-gradient(closest-side, rgba(255, 255, 250, .16), transparent); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mp-nuvem { background: radial-gradient(closest-side, rgba(0, 0, 0, .3), transparent); } }
+/* dossiê acompanha a rolagem ao lado do mapa (mais alto agora) */
+@media (min-width: 821px) { .mp-dossie { position: sticky; top: 84px; } }
+
+/* modo calibrar (?calibrar=1) */
+.mp-mapa.is-calibrar .mp-canvas { cursor: crosshair; }
+.mp-cal { position: absolute; inset: 0; z-index: 7; pointer-events: none; opacity: 0; }
+.mp-cal.is-on { opacity: 1; }
+.mp-cal i { position: absolute; background: #ff3b3b; box-shadow: 0 0 0 1px rgba(0, 0, 0, .5); }
+.mp-cal .h { left: 0; right: 0; top: 0; height: 1px; transform: translateY(var(--cy, 0)); }
+.mp-cal .v { top: 0; bottom: 0; left: 0; width: 1px; transform: translateX(var(--cx, 0)); }
+.mp-cal b { position: absolute; left: 0; top: 0; transform: translate(calc(var(--cx, 0) + 10px), calc(var(--cy, 0) + 10px)); background: #ff3b3b; color: #fff; font: 600 11px var(--font-mono); padding: 3px 6px; white-space: nowrap; }
+.mp-cal-info { position: absolute; left: 50%; top: 8px; z-index: 7; transform: translateX(-50%); background: rgba(15, 17, 11, .88); color: #f1ecd9; font: 500 11px var(--font-mono); letter-spacing: .04em; padding: 5px 9px; white-space: nowrap; pointer-events: none; }
+.mp-cal-info b { color: #ff7b6b; text-transform: uppercase; }
+.mp-cal-toast { position: absolute; left: 50%; bottom: 56px; z-index: 8; transform: translate(-50%, 8px); background: #ff3b3b; color: #fff; font: 600 12px var(--font-mono); padding: 8px 12px; opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; white-space: nowrap; }
+.mp-cal-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 520px) { .mp-cal-info { font-size: 10px; max-width: 92%; white-space: normal; text-align: center; } }
