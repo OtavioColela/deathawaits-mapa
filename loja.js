@@ -1,6 +1,6 @@
 /* Loja VIP: lista os VIPs, cria o pagamento e mostra o status na volta do Mercado Pago. */
 // Endereco do backend da loja (Cloudflare Worker), sem barra no final
-const LOJA_API = "https://deathawaits-loja.SEU-USUARIO.workers.dev";
+const LOJA_API = "https://deathawaits-loja.deathawaitscda.workers.dev";
 
 (() => {
   "use strict";
