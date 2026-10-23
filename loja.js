@@ -43,6 +43,7 @@ const LOJA_API = "https://deathawaits-loja.deathawaitscda.workers.dev";
   const zoom = $("#lj-zoom");
   function desenhaKits(p) {
     const box = $("#lj-kits"); if (!box) return;
+    const sec = $("#kits"); if (sec) sec.hidden = !(p && p.kits && p.kits.length);
     $("#lj-kits-t").textContent = p ? "Kits do " + p.nome : "Kits";
     box.innerHTML = "";
     (p && p.kits || []).forEach((k) => {
