@@ -72,12 +72,15 @@
 /* ---------- 2. status ao vivo ---------- */
 .mp-status {
   margin-top: 28px; border: 2px solid var(--fg); background: var(--surface);
-  display: grid; grid-template-columns: auto repeat(3, 1fr); position: relative;
+  display: grid; grid-template-columns: auto repeat(2, 1fr); position: relative;
 }
 .mp-status.is-exemplo { border-style: dashed; }
 .mp-status-h { display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 14px 18px; background: var(--fg); color: var(--bg); }
 .mp-live { display: inline-flex; align-items: center; gap: 8px; }
-.mp-live i { width: 9px; height: 9px; border-radius: 50%; background: var(--blood); box-shadow: 0 0 0 0 var(--blood); animation: mp-ping 1.8s ease-out infinite; }
+.mp-live i { --dot: #8a8a80; width: 9px; height: 9px; border-radius: 50%; background: var(--dot); box-shadow: 0 0 0 0 var(--dot); animation: none; }
+.mp-status.is-online .mp-live i { --dot: #2ecc55; animation: mp-ping 1.8s ease-out infinite; }
+.mp-status.is-offline .mp-live i { --dot: #e0352b; animation: mp-ping 1.8s ease-out infinite; }
+.mp-status.is-verificando .mp-live i { animation: mp-blink .9s steps(2, start) infinite; }
 .mp-status.is-exemplo .mp-live i { background: var(--muted); animation: none; }
 .mp-badge-ex {
   display: inline-block; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
@@ -87,7 +90,6 @@
 .mp-stat span { display: block; font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
 .mp-stat b { display: block; font-family: var(--font-display); font-weight: 900; font-size: 34px; line-height: 1.05; letter-spacing: .02em; overflow-wrap: anywhere; }
 .mp-stat b small { font-size: 18px; color: var(--muted); font-weight: 700; }
-.mp-stat b.mp-cla { font-size: 24px; line-height: 1.2; padding-top: 6px; }
 .mp-status.is-exemplo .mp-stat b { color: var(--muted); }
 .mp-status-note { grid-column: 1 / -1; margin: 0; padding: 7px 18px; border-top: 1px dashed var(--line); font-size: 12.5px; color: var(--muted); }
 
@@ -249,7 +251,7 @@
 
 /* ---------- animações ---------- */
 @keyframes mp-pulse { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(2.1); opacity: 0; } }
-@keyframes mp-ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--blood) 70%, transparent); } 100% { box-shadow: 0 0 0 9px transparent; } }
+@keyframes mp-ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--dot, var(--blood)) 70%, transparent); } 100% { box-shadow: 0 0 0 9px transparent; } }
 @keyframes mp-blink { to { visibility: hidden; } }
 @keyframes mp-flow { to { stroke-dashoffset: -40; } }
 @keyframes mp-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -264,7 +266,6 @@
   .mp-status-h { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 10px 14px; }
   .mp-stat { border-left: 0; border-top: 1px solid var(--line); }
   .mp-stat:nth-of-type(odd) { border-right: 1px solid var(--line); }
-  .mp-stat.mp-stat-cla { grid-column: 1 / -1; border-right: 0; }
   .mp-marker .mp-tag { display: none; }
   .mp-marker[aria-pressed="true"] .mp-tag { display: block; }
   .mp-cta-in { grid-template-columns: 1fr; padding: 24px 20px 26px; }
@@ -426,7 +427,7 @@
 .mp-type.is-typing::after { content: "▌"; margin-left: 1px; color: var(--r, var(--accent)); animation: mp-blink .7s steps(2, start) infinite; font-style: normal; }
 
 /* ---------- status: AO VIVO ---------- */
-.mp-status:not(.is-exemplo) .mp-live i { animation: mp-ping 1.8s ease-out infinite, mp-dot-blink 1.2s steps(2, start) infinite; }
+
 .mp-stat b .mp-n { display: inline; font: inherit; color: inherit; letter-spacing: inherit; text-transform: none; font-variant-numeric: tabular-nums; }
 
 /* ---------- cards: inclinação, zoom, legenda ---------- */

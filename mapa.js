@@ -8,39 +8,18 @@ const MAPA_CONFIG = {
   pastaImagens: "",
 
   /* ------------------------------------------------------------------
-     STATUS AO VIVO
-     Enquanto modoExemplo = true, a faixa mostra os números de "exemplo"
-     abaixo com o selo "DADOS DE EXEMPLO". NUNCA publique o site com
-     modoExemplo = true fingindo que são números reais.
-
-     Para ligar dados reais:
-     1) Jogadores online -> API pública mcsrvstat.us (aceita CORS):
-          https://api.mcsrvstat.us/3/SEU_IP
-        Resposta: { online: true, players: { online: 12, max: 100 } }
-        Preencha "servidorIP" com o IP/domínio do servidor.
-     2) Discord -> duas opções:
-        a) Convite com contagem (membros totais e online, sem configurar nada):
-             https://discord.com/api/v10/invites/CODIGO?with_counts=true
-           Campos: approximate_member_count / approximate_presence_count.
-           Preencha "discordConvite" (já está com o código do site).
-        b) Widget do servidor (só conta quem está ONLINE no Discord):
-             https://discord.com/api/guilds/ID_DO_SERVIDOR/widget.json
-           Ative em Configurações do servidor > Widget. Campo: presence_count.
-     3) Clã no topo / domínio dos locais -> não existe API pública.
-        Exporte do plugin de clãs/dominação um JSON (ex.: status.json no
-        próprio GitHub Pages, atualizado por um bot) e coloque a URL em
-        "statusJsonUrl". Formato esperado:
-          { "claTopo": "[TAG] Nome", "dominio": { "centro": "[TAG] Nome", ... } }
-     Depois de configurar, troque modoExemplo para false.
+     STATUS AO VIVO (atualiza sozinho a cada "atualizarACadaSeg")
+     - Servidor: pergunta para a API publica mcsrvstat.us (e, se ela falhar,
+       para a api.mcstatus.io) se o servidor esta online e quantos jogadores
+       tem. Bolinha verde = online, vermelha = offline, cinza = sem resposta.
+     - Discord: total de membros pelo convite (with_counts=true).
      ------------------------------------------------------------------ */
   status: {
-    modoExemplo: true,
-    exemplo: { online: 37, max: 120, discord: 850, claTopo: "[TAG] Clã de exemplo" },
-    servidorIP: "",              // ex.: "jogar.deathawaits.com.br"
-    discordConvite: "gc73gQfb5F", // código de https://discord.gg/gc73gQfb5F
-    statusJsonUrl: "",           // ex.: "status.json"
+    servidorIP: "node.skycenterhosting.com.br:25567",
+    discordConvite: "gc73gQfb5F", // codigo de https://discord.gg/gc73gQfb5F
     atualizarACadaSeg: 60
   },
+
 
   /* ------------------------------------------------------------------
      IMAGEM DO MAPA (render real do servidor, visto de cima)
@@ -70,50 +49,48 @@ const MAPA_CONFIG = {
           nomes de locais próximos (Castelo / Capital / Safezone).
      risco: "baixo" | "medio" | "alto" | "extremo"
      loot:  "comum" | "raro" | "militar"
-     dominio: texto do clã. Enquanto for placeholder, deixe dominioExemplo: true
-     (mostra o selo "exemplo" ao lado).
      ATENÇÃO: risco e loot abaixo são sugestões do protótipo. Ajustem para
      o que realmente acontece no servidor.
      ------------------------------------------------------------------ */
   locais: [
     { id: "safezone", n: "01", nome: "Safezone", img: "safezone.jpg", x: 62.71, y: 27.01, tag: "b", // caixa "safezone": logo abaixo da Capital, junto ao lago
-      risco: "baixo", loot: "comum", dominio: "Ninguém · zona neutra", dominioExemplo: false,
+      risco: "baixo", loot: "comum",
       alt: "Safezone: praça cercada com caminhões do exército, hospital, helicópteros e bandeiras do Brasil em volta de um prédio do governo",
       lore: "Bandeiras do Brasil ainda tremulam sobre a praça. Os caminhões do exército e o hospital são a última coisa organizada que sobrou. Aqui ninguém atira. Lá fora, ninguém te espera." },
     { id: "capital", n: "02", nome: "Capital", img: "capital.jpg", x: 69.72, y: 16.64, tag: "r", // caixa "capital": a maior cidade, norte
-      risco: "alto", loot: "raro", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
+      risco: "alto", loot: "raro",
       alt: "Capital: horizonte de arranha-céus com um capitólio de cúpula, um estádio e uma ponte vermelha ao fundo",
       lore: "Do estádio dá pra ver o capitólio e a ponte vermelha. Cada arranha-céu tem andares que ninguém saqueou, porque quem sobe nem sempre desce." },
     { id: "castelo", n: "03", nome: "Castelo", img: "castelo.jpg", x: 61.05, y: 6.76, tag: "l", // caixa "castelo": ponto cercado por fosso, topo do mapa
-      risco: "medio", loot: "raro", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
+      risco: "medio", loot: "raro",
       alt: "Castelo de pedra numa ilha cercada por um rio, no meio de uma floresta de pinheiros",
       lore: "Uma ponte, um fosso e muralhas de pedra. O melhor esconderijo do mapa, se você conseguir tirar quem já está lá dentro." },
     { id: "base-radioativa", n: "04", nome: "Base radioativa", img: "base-radioativa.jpg", x: 31.23, y: 18.06, tag: "r", // caixa "base radioativa": quadrado vermelho, noroeste
-      risco: "extremo", loot: "militar", dominio: "Em disputa", dominioExemplo: true,
+      risco: "extremo", loot: "militar",
       alt: "Base radioativa: complexo murado com galpões e tonéis laranja de material perigoso, visto do alto",
       lore: "Tonéis laranja empilhados até onde a vista alcança. O contador Geiger não para de estalar, e os mortos daqui andam de roupa hazmat. O melhor loot do mapa cobra caro." },
     { id: "springfield", n: "05", nome: "Springfield", img: "springfield.jpg", x: 11.4, y: 14.88, tag: "b", // caixa "springfield": cidade no litoral noroeste
-      risco: "medio", loot: "comum", dominio: "Sem dono", dominioExemplo: true,
+      risco: "medio", loot: "comum",
       alt: "Springfield: cidade com um posto de controle militar no cruzamento, um prédio de tijolos vermelhos e o mar ao fundo",
       lore: "O posto de controle no cruzamento ainda tem a cancela abaixada. Os soldados foram embora; o que eles deixaram nas caixas, não." },
     { id: "prisao", n: "06", nome: "Prisão", img: "prisao.jpg", x: 51.36, y: 42.35, tag: "r", // caixa "prisão": centro do mapa, à beira do rio
-      risco: "alto", loot: "raro", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
+      risco: "alto", loot: "raro",
       alt: "Prisão: pátio cercado por muros e grades, com bancos de madeira e blocos de celas ao fundo",
       lore: "As celas se abriram quando a energia caiu. Os presos não foram longe: ainda rondam o pátio, esperando a próxima visita." },
     { id: "base-aerea", n: "07", nome: "Base aérea", img: "base-aerea.jpg", x: 91.35, y: 49.09, tag: "l", // caixa "base aérea": pista no leste
-      risco: "alto", loot: "militar", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
+      risco: "alto", loot: "militar",
       alt: "Base aérea: estrada ao lado de hangares militares verdes, um helicóptero caído e um quartel de bombeiros",
       lore: "Hangares verdes, um helicóptero no chão e a pista vazia. A evacuação saiu daqui, e quem ficou para trás ainda guarda as armas." },
     { id: "tacoma", n: "08", nome: "Tacoma", img: "tacoma.jpg", x: 59.87, y: 60.56, tag: "b", // caixa "tacoma": cidade em grade, centro-sul
-      risco: "medio", loot: "comum", dominio: "Sem dono", dominioExemplo: true,
+      risco: "medio", loot: "comum",
       alt: "Tacoma: cruzamento com um tanque abandonado, um prédio com cúpula e uma bandeira entre prédios de apartamentos",
       lore: "Um tanque parado no cruzamento, sem combustível e sem tripulação. As ruas em grade parecem calmas. É exatamente isso que preocupa." },
     { id: "aeroporto", n: "09", nome: "Aeroporto", img: "aeroporto.jpg", x: 11.62, y: 68.21, tag: "b", // caixa "aeroporto": litoral oeste
-      risco: "medio", loot: "raro", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
+      risco: "medio", loot: "raro",
       alt: "Aeroporto: terminal com aviões estacionados, carrinhos de bagagem e a torre de controle à beira-mar",
       lore: "O último voo nunca saiu. As malas continuam na esteira, os aviões no pátio, e a torre de controle ainda enxerga tudo até o mar." },
     { id: "residencial", n: "10", nome: "Residencial", img: "residencial.jpg", x: 16.67, y: 77.97, tag: "r", // caixa "residencial": sudoeste, abaixo do aeroporto
-      risco: "baixo", loot: "comum", dominio: "Sem dono", dominioExemplo: true,
+      risco: "baixo", loot: "comum",
       alt: "Residencial: rua de casas grandes com telhados cinza no meio de uma floresta",
       lore: "Casas grandes, garagens fechadas e despensas cheias. Bom lugar pra começar, desde que você feche a porta ao entrar." }
   ],
@@ -226,9 +203,6 @@ const MAPA_CONFIG = {
     $("h3", dossie).textContent = l.nome;
     $("[data-f=risco]", dossie).innerHTML = `<span class="mp-meter" aria-hidden="true">${[1,2,3,4].map((i) => `<i class="${i <= rNivel ? "on" : ""}"></i>`).join("")}</span>${rNome}`;
     $("[data-f=loot]", dossie).innerHTML = `<span class="mp-loot" data-loot="${l.loot}">${LOOT[l.loot]}</span>`;
-    const dom = (dominioReal && dominioReal[l.id]) || l.dominio;
-    const ehEx = !(dominioReal && dominioReal[l.id]) && l.dominioExemplo;
-    $("[data-f=dominio]", dossie).innerHTML = `${esc(dom)}${ehEx ? ' <span class="mp-ex">exemplo</span>' : ""}`;
     digitar(`“${l.lore}”`, animar && anima());
     if (animar && anima()) {
       const body = $(".mp-dossie-in", dossie);
@@ -329,7 +303,6 @@ const MAPA_CONFIG = {
   /* ---------- status ao vivo ---------- */
   const S = C.status;
   const strip = $(".mp-status");
-  let dominioReal = null;
   let stripVisto = false;
   const ultimo = {};
   // conta de 0 (ou do último valor) até o número, quando a faixa aparece na tela
@@ -348,30 +321,48 @@ const MAPA_CONFIG = {
     });
   }
   const fmt = (n) => (typeof n === "number" ? n.toLocaleString("pt-BR") : "—");
-  function pintaStatus(d, exemplo) {
-    strip.classList.toggle("is-exemplo", exemplo);
-    $(".mp-badge-ex", strip).hidden = !exemplo;
-    $(".mp-live-txt", strip).textContent = exemplo ? "Status do servidor" : "Ao vivo";
+  // estado: "online" | "offline" | "erro" (sem resposta das APIs) | "verificando"
+  function pintaStatus(d) {
+    const est = d.estado || "verificando";
+    ["online", "offline", "erro", "verificando"].forEach((e) => strip.classList.toggle("is-" + e, e === est));
+    strip.classList.remove("is-exemplo");
+    $(".mp-live-txt", strip).textContent = { online: "Servidor online", offline: "Servidor offline", erro: "Status indisponível", verificando: "Verificando..." }[est];
     $("[data-s=online]", strip).innerHTML = d.online == null ? "—" : `<span class="mp-n" data-n="${d.online}">${fmt(d.online)}</span>${d.max ? ` <small>/ ${fmt(d.max)}</small>` : ""}`;
     $("[data-s=discord]", strip).innerHTML = d.discord == null ? "—" : `<span class="mp-n" data-n="${d.discord}">${fmt(d.discord)}</span>`;
     if (stripVisto) contar();
-    $("[data-s=cla]", strip).textContent = d.claTopo || "—";
-    $(".mp-status-note", strip).textContent = exemplo
-      ? "Números ilustrativos do protótipo. Ainda não estão conectados ao servidor nem ao Discord."
-      : `Atualizado às ${new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}.`;
+    $(".mp-status-note", strip).textContent = est === "verificando" ? "Consultando o servidor..."
+      : `Atualizado às ${new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} · atualiza sozinho a cada ${Math.max(30, S.atualizarACadaSeg)} s.`;
   }
-  async function getJSON(url) { const r = await fetch(url, { cache: "no-store" }); if (!r.ok) throw new Error(r.status); return r.json(); }
+  async function getJSON(url) {
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 10000);
+    try { const r = await fetch(url, { cache: "no-store", signal: ctl.signal }); if (!r.ok) throw new Error(r.status); return await r.json(); }
+    finally { clearTimeout(t); }
+  }
+  // tenta mcsrvstat.us; se falhar, api.mcstatus.io. Retorna { online, players, max } ou lança erro.
+  async function pingServidor(ip) {
+    try {
+      const j = await getJSON(`https://api.mcsrvstat.us/3/${encodeURIComponent(ip)}`);
+      return { online: !!j.online, players: j.players?.online ?? 0, max: j.players?.max ?? null };
+    } catch (e) {
+      const j = await getJSON(`https://api.mcstatus.io/v2/status/java/${encodeURIComponent(ip)}`);
+      return { online: !!j.online, players: j.players?.online ?? 0, max: j.players?.max ?? null };
+    }
+  }
   async function atualizaStatus() {
-    const d = { online: null, max: null, discord: null, claTopo: null };
+    const d = { estado: "erro", online: null, max: null, discord: null };
     const tarefas = [];
-    if (S.servidorIP) tarefas.push(getJSON(`https://api.mcsrvstat.us/3/${encodeURIComponent(S.servidorIP)}`).then((j) => { d.online = j.online ? j.players?.online ?? 0 : 0; d.max = j.players?.max ?? null; }));
+    if (S.servidorIP) tarefas.push(pingServidor(S.servidorIP).then((r) => {
+      d.estado = r.online ? "online" : "offline";
+      d.online = r.online ? r.players : 0;
+      d.max = r.online ? r.max : null;
+    }));
     if (S.discordConvite) tarefas.push(getJSON(`https://discord.com/api/v10/invites/${S.discordConvite}?with_counts=true`).then((j) => { d.discord = j.approximate_member_count ?? null; }));
-    if (S.statusJsonUrl) tarefas.push(getJSON(S.statusJsonUrl).then((j) => { d.claTopo = j.claTopo || null; dominioReal = j.dominio || null; }));
     await Promise.allSettled(tarefas); // se uma fonte falhar, aquele campo mostra "—" (nunca um número inventado)
-    pintaStatus(d, false); render(fixado, false);
+    pintaStatus(d);
   }
-  if (S.modoExemplo) pintaStatus(S.exemplo, true);
-  else { pintaStatus({}, false); atualizaStatus(); setInterval(atualizaStatus, Math.max(30, S.atualizarACadaSeg) * 1000); }
+  pintaStatus({ estado: "verificando" });
+  atualizaStatus();
+  setInterval(atualizaStatus, Math.max(30, S.atualizarACadaSeg) * 1000);
 
   /* ---------- início (aceita link direto: #mapa-capital, #mapa-castelo...) ---------- */
   const hash = location.hash.replace("#mapa-", "");

@@ -210,7 +210,7 @@
     });
     const items = $$(".item", feats), tabs = $$(".da-tab");
     items.forEach((it) => {
-      const nomes = { pvp: "PvP", pve: "PvE", clas: "Clãs" };
+      const nomes = { pvp: "PvP", pve: "PvE" };
       const t = d.createElement("div"); t.className = "da-tags"; t.innerHTML = it.dataset.tags.split(" ").map((x) => `<span>${nomes[x]}</span>`).join("");
       it.querySelector("div").appendChild(t);
     });

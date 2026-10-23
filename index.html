@@ -64,7 +64,7 @@
       <div data-parallax="-0.08">
         <p class="eyebrow da-intro" style="--d:.1s">Crafting Dead · Minecraft 1.6.4</p>
         <h1 aria-label="DeathAwaits"><span class="da-line" aria-hidden="true">Death</span><span class="da-line" aria-hidden="true"><span>Awaits</span></span></h1>
-        <p class="lead da-intro" style="--d:.7s">Um servidor brasileiro de sobrevivência no apocalipse zumbi. Procure loot nas cidades, monte sua base, forme um clã e dispute o mapa com outros sobreviventes.</p>
+        <p class="lead da-intro" style="--d:.7s">Um servidor brasileiro de sobrevivência no apocalipse zumbi. Procure loot nas cidades, monte sua base e dispute o mapa com outros sobreviventes.</p>
         <div class="cta da-intro" style="--d:.85s">
           <a class="btn btn-primary" data-magnetic href="https://www.dropbox.com/scl/fi/nmkjsgwz30eq004yfdkuc/DeathAwaits-Launcher-Setup-1.0.0.exe?rlkey=nyyislrsiw7ogw8956etbm78i&amp;st=9kq0o0xe&amp;dl=1" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
@@ -113,14 +113,13 @@
     <div class="wrap">
 
       <!-- 2. Status do servidor (configurado em mapa.js > MAPA_CONFIG.status) -->
-      <div class="mp-status is-exemplo" aria-live="polite" data-reveal>
+      <div class="mp-status is-verificando" aria-live="polite" data-reveal>
         <div class="mp-status-h">
-          <span class="mp-live mp-mono"><i aria-hidden="true"></i><span class="mp-live-txt">Status do servidor</span></span>
-          <span class="mp-badge-ex">Dados de exemplo</span>
+          <span class="mp-live mp-mono"><i aria-hidden="true"></i><span class="mp-live-txt">Verificando...</span></span>
+          
         </div>
         <div class="mp-stat"><span>Jogadores online</span><b data-s="online">—</b></div>
         <div class="mp-stat"><span>Membros no Discord</span><b data-s="discord">—</b></div>
-        <div class="mp-stat mp-stat-cla"><span>Clã no topo</span><b class="mp-cla" data-s="cla">—</b></div>
         <p class="mp-status-note"></p>
       </div>
 
@@ -206,7 +205,6 @@
               <dl class="mp-ficha">
                 <dt>Risco</dt><dd data-f="risco"></dd>
                 <dt>Loot</dt><dd data-f="loot"></dd>
-                <dt>Domínio atual</dt><dd data-f="dominio"></dd>
               </dl>
               <p class="mp-lore" title="Clique para mostrar o texto todo"><span class="mp-sr"></span><span class="mp-type" aria-hidden="true"></span></p>
               <div class="mp-nav">
@@ -230,7 +228,7 @@
         <div class="mp-cta-in">
           <div>
             <h3>Pronto pra sair da <span>safezone?</span></h3>
-            <p>Baixe o launcher, entre no servidor e escolha seu primeiro destino. No Discord você encontra clã, avisos de eventos e suporte.</p>
+            <p>Baixe o launcher, entre no servidor e escolha seu primeiro destino. No Discord você encontra avisos de eventos e suporte.</p>
           </div>
           <div>
             <div class="cta">
@@ -310,7 +308,6 @@
         <button class="da-tab" role="tab" type="button" aria-selected="true" aria-controls="da-feats" data-tab="todos">Todos<em></em></button>
         <button class="da-tab" role="tab" type="button" aria-selected="false" aria-controls="da-feats" data-tab="pvp" tabindex="-1">PvP<em></em></button>
         <button class="da-tab" role="tab" type="button" aria-selected="false" aria-controls="da-feats" data-tab="pve" tabindex="-1">PvE<em></em></button>
-        <button class="da-tab" role="tab" type="button" aria-selected="false" aria-controls="da-feats" data-tab="clas" tabindex="-1">Clãs<em></em></button>
       </div>
       <div class="lista da-cards" id="da-feats" role="tabpanel" aria-live="polite">
         <div class="item" data-sr data-tags="pve">
@@ -321,19 +318,19 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 21c1-4 4-6 7-6s6 2 7 6"/><path d="M9 7h.01M15 7h.01"/></svg>
           <div><h3>Zumbis equipados</h3><p>Zumbis aparecem com roupas, coletes e capacetes, que podem cair quando eles morrem.</p></div>
         </div>
-        <div class="item" data-sr data-tags="pve clas">
+        <div class="item" data-sr data-tags="pve">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2c3 3 6 4 8 4 0 8-3 13-8 16C7 19 4 14 4 6c2 0 5-1 8-4Z"/></svg>
           <div><h3>Bases</h3><p>Construa sua base para guardar o loot e se proteger dos zumbis.</p></div>
         </div>
-        <div class="item" data-sr data-tags="pvp clas">
+        <div class="item" data-sr data-tags="pvp">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 21V4"/><path d="M4 4h12l-2 4 2 4H4"/></svg>
           <div><h3>Dominação de cidades</h3><p>Clãs disputam pontos de dominação e ganham recompensas por segurar o local.</p></div>
         </div>
-        <div class="item" data-sr data-tags="pvp clas">
+        <div class="item" data-sr data-tags="pvp">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10h14v11"/><path d="M9 3l6 6M15 3 9 9"/></svg>
           <div><h3>Raides</h3><p>Invada as bases de outros sobreviventes para levar o loot deles, e prepare a sua para aguentar os ataques.</p></div>
         </div>
-        <div class="item" data-sr data-tags="pvp clas">
+        <div class="item" data-sr data-tags="pvp">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2 3 7v6c0 5 4 8 9 9 5-1 9-4 9-9V7l-9-5Z"/><path d="M9 12l2 2 4-4"/></svg>
           <div><h3>Patentes e clãs</h3><p>Suba de patente, monte seu clã e acompanhe seu placar de abates.</p></div>
         </div>
