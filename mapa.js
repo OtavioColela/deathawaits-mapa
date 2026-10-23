@@ -245,6 +245,16 @@ const MAPA_CONFIG = {
   $(".mp-prev", dossie).addEventListener("click", () => passo(-1));
   $(".mp-next", dossie).addEventListener("click", () => passo(1));
   $(".mp-close", dossie).addEventListener("click", fecharSheet);
+  // foto do dossiê abre o visualizador do site (site.js), com as 7 fotos do mapa
+  const fotoBox = $(".mp-foto", dossie);
+  fotoBox.tabIndex = 0; fotoBox.setAttribute("role", "button"); fotoBox.setAttribute("aria-label", "Ampliar foto do local");
+  const abreFoto = () => {
+    if (!window.DALightbox) return;
+    const v = C.locais.findIndex((l) => l.id === (dossie.dataset.preview || fixado));
+    window.DALightbox.open(C.locais.map((l) => ({ src: img(l.img), alt: l.alt, caption: `Registro ${l.n} · ${l.nome}` })), Math.max(0, v), $("img", fotoBox));
+  };
+  fotoBox.addEventListener("click", abreFoto);
+  fotoBox.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abreFoto(); } });
   backdrop.addEventListener("click", fecharSheet);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") fecharSheet(); });
   // prende o foco dentro do sheet no celular

@@ -497,3 +497,10 @@
   .mp-scan { display: none; }
   .mp-card button:hover { transform: none; }
 }
+
+/* v3: foto do dossiê abre o visualizador */
+.mp-foto[role="button"] { cursor: zoom-in; }
+.mp-foto[role="button"]::after { z-index: 1; }
+.mp-foto .mp-ampliar { position: absolute; left: 10px; top: 10px; z-index: 2; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; background: var(--fg); color: var(--bg); padding: 2px 7px; opacity: 0; transform: translateY(-4px); transition: opacity .2s, transform .2s; pointer-events: none; }
+.mp-foto:hover .mp-ampliar, .mp-foto:focus-visible .mp-ampliar { opacity: .9; transform: none; }
+.mp-foto:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
