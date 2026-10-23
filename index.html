@@ -238,7 +238,7 @@ footer { border-top: 2px solid var(--fg); padding-block: 28px 40px; }
         <!-- <source src="video/mapa-loop.mp4" type="video/mp4"> -->
       </video>
       <span class="mp-stamp">Zona de quarentena</span>
-      <div class="wrap mp-video-inner">
+      <div class="wrap mp-video-inner" data-reveal="stagger">
         <div class="mp-rec mp-mono"><i aria-hidden="true"></i> Registro de reconhecimento · Setor DA-164</div>
         <h2 id="mp-titulo">O <span>mapa</span></h2>
         <p class="mp-lead">Cidades construídas bloco a bloco para o DeathAwaits. Escolha um ponto e leia o dossiê antes de sair da safezone.</p>
@@ -249,7 +249,7 @@ footer { border-top: 2px solid var(--fg); padding-block: 28px 40px; }
     <div class="wrap">
 
       <!-- 2. Status do servidor (configurado em mapa.js > MAPA_CONFIG.status) -->
-      <div class="mp-status is-exemplo" aria-live="polite">
+      <div class="mp-status is-exemplo" aria-live="polite" data-reveal>
         <div class="mp-status-h">
           <span class="mp-live mp-mono"><i aria-hidden="true"></i><span class="mp-live-txt">Status do servidor</span></span>
           <span class="mp-badge-ex">Dados de exemplo</span>
@@ -261,7 +261,7 @@ footer { border-top: 2px solid var(--fg); padding-block: 28px 40px; }
       </div>
 
       <!-- 3. Título + filtro/legenda de risco -->
-      <div class="mp-toolbar">
+      <div class="mp-toolbar" data-reveal="stagger">
         <div>
           <h3>Mapa tático</h3>
           <p>Clique ou toque num ponto para abrir o dossiê. Quanto maior o risco, melhor o loot.</p>
@@ -278,10 +278,11 @@ footer { border-top: 2px solid var(--fg); padding-block: 28px 40px; }
       <p class="mp-filtro-msg" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Mostrando todos os locais.</p>
 
       <!-- 4. Mapa + dossiê -->
-      <div class="mp-grid">
+      <div class="mp-grid" data-reveal>
         <div class="mp-mapa">
-          <div class="mp-mapa-h"><span>Carta tática · DA-164</span><span>7 locais</span></div>
+          <div class="mp-mapa-h"><span class="mp-flicker">Carta tática · DA-164</span><span>7 locais</span></div>
           <div class="mp-canvas">
+            <div class="mp-scan" aria-hidden="true"><i class="mp-radar"></i><i class="mp-band"></i></div>
 <svg viewBox="0 0 1000 620" role="img" aria-labelledby="mp-svg-t" preserveAspectRatio="xMidYMid slice">
 <title id="mp-svg-t">Mapa ilustrativo do DeathAwaits com rio, floresta, cidade e os 7 locais marcados</title>
 <defs>
@@ -301,21 +302,21 @@ footer { border-top: 2px solid var(--fg); padding-block: 28px 40px; }
 <path class="mp-svg-contour" d="M60 40C130 20 170 90 150 150S90 240 120 300"/>
 <path class="mp-svg-contour" d="M260 30C300 60 290 110 250 130"/>
 <!-- rio + cânion + lago do castelo -->
-<path class="mp-svg-cliff" d="M340 -20C320 60 170 70 175 160C180 240 300 260 275 350"/>
-<path class="mp-svg-water" stroke-width="22" d="M340 -20C320 60 170 70 175 160C180 240 300 260 275 350"/>
-<ellipse class="mp-svg-lake" cx="250" cy="402" rx="80" ry="56"/>
-<path class="mp-svg-water" stroke-width="22" d="M240 455C220 530 300 570 262 640"/>
+<path class="mp-svg-cliff mp-late" d="M340 -20C320 60 170 70 175 160C180 240 300 260 275 350"/>
+<path class="mp-svg-water mp-draw" pathLength="1" style="--dd:.1s" stroke-width="22" d="M340 -20C320 60 170 70 175 160C180 240 300 260 275 350"/>
+<ellipse class="mp-svg-lake mp-pop" cx="250" cy="402" rx="80" ry="56"/>
+<path class="mp-svg-water mp-draw" pathLength="1" style="--dd:.9s" stroke-width="22" d="M240 455C220 530 300 570 262 640"/>
 <path class="mp-svg-flow" d="M340 -20C320 60 170 70 175 160C180 240 300 260 275 350"/>
 <path class="mp-svg-flow" d="M240 455C220 530 300 570 262 640"/>
 <ellipse cx="250" cy="402" rx="42" ry="28" fill="var(--mp-land)" stroke="var(--mp-rock)" stroke-width="1.5"/>
 <g class="mp-svg-ink" opacity=".75"><rect x="236" y="390" width="28" height="18"/><rect x="232" y="384" width="9" height="9"/><rect x="259" y="384" width="9" height="9"/><rect x="232" y="404" width="9" height="9"/><rect x="259" y="404" width="9" height="9"/></g>
 <!-- estradas -->
 <g>
-<path class="mp-svg-road-edge" d="M500 320C580 300 620 262 690 250M690 250C750 200 800 150 838 118M500 320C600 360 650 450 725 476M500 320C520 400 450 460 470 535M500 320C420 340 380 402 332 402M690 250C800 260 900 300 1010 300M725 476C820 500 900 470 1010 470M500 320C500 200 560 80 600 -10"/>
-<path class="mp-svg-road" d="M500 320C580 300 620 262 690 250M690 250C750 200 800 150 838 118M500 320C600 360 650 450 725 476M500 320C520 400 450 460 470 535M500 320C420 340 380 402 332 402M690 250C800 260 900 300 1010 300M725 476C820 500 900 470 1010 470M500 320C500 200 560 80 600 -10"/>
-<path class="mp-svg-road-mid" d="M500 320C580 300 620 262 690 250M690 250C750 200 800 150 838 118M500 320C600 360 650 450 725 476M500 320C520 400 450 460 470 535M690 250C800 260 900 300 1010 300M725 476C820 500 900 470 1010 470M500 320C500 200 560 80 600 -10"/>
+<path class="mp-svg-road-edge mp-draw" pathLength="1" style="--dd:.3s" d="M500 320C580 300 620 262 690 250M690 250C750 200 800 150 838 118M500 320C600 360 650 450 725 476M500 320C520 400 450 460 470 535M500 320C420 340 380 402 332 402M690 250C800 260 900 300 1010 300M725 476C820 500 900 470 1010 470M500 320C500 200 560 80 600 -10"/>
+<path class="mp-svg-road mp-draw" pathLength="1" style="--dd:.3s" d="M500 320C580 300 620 262 690 250M690 250C750 200 800 150 838 118M500 320C600 360 650 450 725 476M500 320C520 400 450 460 470 535M500 320C420 340 380 402 332 402M690 250C800 260 900 300 1010 300M725 476C820 500 900 470 1010 470M500 320C500 200 560 80 600 -10"/>
+<path class="mp-svg-road-mid mp-late" d="M500 320C580 300 620 262 690 250M690 250C750 200 800 150 838 118M500 320C600 360 650 450 725 476M500 320C520 400 450 460 470 535M690 250C800 260 900 300 1010 300M725 476C820 500 900 470 1010 470M500 320C500 200 560 80 600 -10"/>
 <rect x="288" y="397" width="46" height="10" fill="var(--mp-rock)"/>
-<path class="mp-svg-trail" d="M480 300C420 240 320 210 205 168"/>
+<path class="mp-svg-trail mp-late" d="M480 300C420 240 320 210 205 168"/>
 </g>
 <!-- cidade, bairros, base, posto -->
 <rect class="mp-svg-block" x="600" y="180" width="16" height="16"/>
@@ -443,7 +444,7 @@ footer { border-top: 2px solid var(--fg); padding-block: 28px 40px; }
                 <dt>Loot</dt><dd data-f="loot"></dd>
                 <dt>Domínio atual</dt><dd data-f="dominio"></dd>
               </dl>
-              <p class="mp-lore"></p>
+              <p class="mp-lore" title="Clique para mostrar o texto todo"><span class="mp-sr"></span><span class="mp-type" aria-hidden="true"></span></p>
               <div class="mp-nav">
                 <button type="button" class="mp-prev">← Anterior</button>
                 <button type="button" class="mp-next">Próximo →</button>
@@ -458,7 +459,7 @@ footer { border-top: 2px solid var(--fg); padding-block: 28px 40px; }
       <ul class="mp-cards" aria-label="Registros dos locais"></ul>
 
       <!-- 6. CTA -->
-      <div class="mp-cta">
+      <div class="mp-cta" data-reveal>
         <div class="hazard" aria-hidden="true"></div>
         <span class="mp-stamp2" aria-hidden="true">Liberado</span>
         <div class="mp-cta-in">

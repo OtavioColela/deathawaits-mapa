@@ -105,6 +105,9 @@ const MAPA_CONFIG = {
   const hoverOk = window.matchMedia("(hover: hover) and (pointer: fine)");
   const quadrante = (l) => "ABCDEFGHIJ"[Math.min(9, Math.floor(l.x / 100))] + (Math.floor(l.y / 100) + 1);
   const img = (f) => C.pastaImagens + f;
+  // animações só para quem não pediu "reduzir movimento"; sem JS nada fica escondido
+  const anima = () => !reduz.matches;
+  if (anima() && "IntersectionObserver" in window) root.classList.add("mp-anim");
 
   /* ---------- vídeo: pausa se o usuário pediu menos movimento ---------- */
   const video = $(".mp-video video");
@@ -119,17 +122,19 @@ const MAPA_CONFIG = {
   /* ---------- marcadores e cards ---------- */
   const canvas = $(".mp-canvas");
   const cards = $(".mp-cards");
-  C.locais.forEach((l) => {
+  C.locais.forEach((l, i) => {
     const b = document.createElement("button");
+    b.style.setProperty("--d", (0.7 + i * 0.16).toFixed(2) + "s");
     b.type = "button"; b.className = "mp-marker"; b.dataset.id = l.id; b.dataset.risco = l.risco;
     b.style.left = (l.x / 10) + "%"; b.style.top = (l.y / 6.2) + "%";
     b.setAttribute("aria-pressed", "false"); b.setAttribute("aria-controls", "mp-dossie");
     b.setAttribute("aria-label", `${l.nome}: risco ${RISCO[l.risco][0]}, loot ${LOOT[l.loot]}`);
-    b.innerHTML = `<span class="mp-pin" aria-hidden="true"></span><span class="mp-tag" aria-hidden="true"><b>${l.n}</b>${esc(l.nome)}</span>`;
+    b.innerHTML = `<span class="mp-ring" aria-hidden="true"></span><span class="mp-lock" aria-hidden="true"></span><span class="mp-pin" aria-hidden="true"></span><span class="mp-tag" aria-hidden="true"><b>${l.n}</b>${esc(l.nome)}</span>`;
     canvas.appendChild(b);
 
     const li = document.createElement("li");
     li.className = "mp-card"; li.dataset.id = l.id; li.dataset.risco = l.risco;
+    li.setAttribute("data-reveal", ""); li.style.setProperty("--d", (i * 0.07).toFixed(2) + "s");
     li.innerHTML = `<button type="button" aria-pressed="false" aria-controls="mp-dossie"><div class="mp-thumb"><img src="${img(l.img)}" alt="${esc(l.alt)}" loading="lazy" width="320" height="200"></div><span>Registro ${l.n} · ${RISCO[l.risco][0]}<b>${esc(l.nome)}</b></span></button>`;
     cards.appendChild(li);
   });
@@ -148,6 +153,23 @@ const MAPA_CONFIG = {
   let filtro = "todos";
   let ultimoGatilho = null;
 
+  /* lore: digita rápido; clique pula. Leitor de tela recebe o texto inteiro de uma vez. */
+  let typeRaf = 0;
+  function digitar(txt, animar) {
+    const sr = $(".mp-lore .mp-sr", dossie), out = $(".mp-lore .mp-type", dossie);
+    cancelAnimationFrame(typeRaf); sr.textContent = txt;
+    if (!animar) { out.textContent = txt; out.classList.remove("is-typing"); return; }
+    const t0 = performance.now() + 250, cps = 70; // caracteres por segundo
+    out.textContent = ""; out.classList.add("is-typing");
+    const passo = (t) => {
+      const n = Math.max(0, Math.floor((t - t0) / 1000 * cps));
+      out.textContent = txt.slice(0, n);
+      if (n < txt.length) typeRaf = requestAnimationFrame(passo); else out.classList.remove("is-typing");
+    };
+    typeRaf = requestAnimationFrame(passo);
+    out.onclick = () => { cancelAnimationFrame(typeRaf); out.textContent = txt; out.classList.remove("is-typing"); };
+  }
+
   function render(id, animar = true) {
     const l = C.locais.find((x) => x.id === id); if (!l) return;
     const [rNome, rNivel] = RISCO[l.risco];
@@ -163,8 +185,8 @@ const MAPA_CONFIG = {
     const dom = (dominioReal && dominioReal[l.id]) || l.dominio;
     const ehEx = !(dominioReal && dominioReal[l.id]) && l.dominioExemplo;
     $("[data-f=dominio]", dossie).innerHTML = `${esc(dom)}${ehEx ? ' <span class="mp-ex">exemplo</span>' : ""}`;
-    $(".mp-lore", dossie).textContent = `“${l.lore}”`;
-    if (animar && !reduz.matches) {
+    digitar(`“${l.lore}”`, animar && anima());
+    if (animar && anima()) {
       const body = $(".mp-dossie-in", dossie);
       body.classList.remove("mp-swap"); void body.offsetWidth; body.classList.add("mp-swap");
     }
@@ -251,13 +273,31 @@ const MAPA_CONFIG = {
   const S = C.status;
   const strip = $(".mp-status");
   let dominioReal = null;
+  let stripVisto = false;
+  const ultimo = {};
+  // conta de 0 (ou do último valor) até o número, quando a faixa aparece na tela
+  function contar() {
+    $$(".mp-n", strip).forEach((el) => {
+      const key = el.parentElement.dataset.s, to = +el.dataset.n, from = ultimo[key] ?? 0;
+      ultimo[key] = to;
+      if (!anima() || from === to) { el.textContent = fmt(to); return; }
+      const t0 = performance.now(), dur = 1300;
+      const tick = (t) => {
+        const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        el.textContent = fmt(Math.round(from + (to - from) * e));
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }
   const fmt = (n) => (typeof n === "number" ? n.toLocaleString("pt-BR") : "—");
   function pintaStatus(d, exemplo) {
     strip.classList.toggle("is-exemplo", exemplo);
     $(".mp-badge-ex", strip).hidden = !exemplo;
     $(".mp-live-txt", strip).textContent = exemplo ? "Status do servidor" : "Ao vivo";
-    $("[data-s=online]", strip).innerHTML = d.online == null ? "—" : `${fmt(d.online)}${d.max ? ` <small>/ ${fmt(d.max)}</small>` : ""}`;
-    $("[data-s=discord]", strip).textContent = fmt(d.discord);
+    $("[data-s=online]", strip).innerHTML = d.online == null ? "—" : `<span class="mp-n" data-n="${d.online}">${fmt(d.online)}</span>${d.max ? ` <small>/ ${fmt(d.max)}</small>` : ""}`;
+    $("[data-s=discord]", strip).innerHTML = d.discord == null ? "—" : `<span class="mp-n" data-n="${d.discord}">${fmt(d.discord)}</span>`;
+    if (stripVisto) contar();
     $("[data-s=cla]", strip).textContent = d.claTopo || "—";
     $(".mp-status-note", strip).textContent = exemplo
       ? "Números ilustrativos do protótipo. Ainda não estão conectados ao servidor nem ao Discord."
@@ -284,4 +324,33 @@ const MAPA_CONFIG = {
     root.scrollIntoView();
     if (mobile.matches) abrirSheet($(`.mp-marker[data-id="${inicial}"]`));
   }
+  /* ---------- scroll-reveal + intro do mapa ---------- */
+  $$('[data-reveal="stagger"]').forEach((g) => Array.from(g.children).forEach((c, i) => c.style.setProperty("--d", (i * 0.12).toFixed(2) + "s")));
+  const mapaBox = $(".mp-mapa");
+  function introMapa() {
+    if (mapaBox.classList.contains("is-in")) return;
+    mapaBox.classList.add("is-in");
+    if (anima()) setTimeout(() => render(fixado, true), 450); // dossiê "chega" junto com o mapa
+  }
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((ents) => ents.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("is-in"); io.unobserve(e.target);
+      if (e.target === strip) { stripVisto = true; contar(); }
+    }), { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
+    $$("[data-reveal]").forEach((el) => io.observe(el));
+    if (!strip.hasAttribute("data-reveal")) io.observe(strip);
+    const ioMapa = new IntersectionObserver((ents) => { if (ents[0].isIntersecting) { introMapa(); ioMapa.disconnect(); } }, { threshold: 0.35 });
+    ioMapa.observe(mapaBox);
+  } else { $$("[data-reveal]").forEach((el) => el.classList.add("is-in")); introMapa(); stripVisto = true; contar(); }
+
+  /* ---------- cards: inclinação 3D seguindo o mouse ---------- */
+  cards.addEventListener("pointermove", (e) => {
+    if (!anima() || !hoverOk.matches) return;
+    const b = e.target.closest(".mp-card button"); if (!b) return;
+    const r = b.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+    b.style.setProperty("--ry", (x * 10).toFixed(2) + "deg"); b.style.setProperty("--rx", (-y * 10).toFixed(2) + "deg");
+  });
+  cards.addEventListener("pointerout", (e) => { const b = e.target.closest(".mp-card button"); if (b && !b.contains(e.relatedTarget)) { b.style.removeProperty("--rx"); b.style.removeProperty("--ry"); } });
 })();
