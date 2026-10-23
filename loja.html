@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="site.css?v=6">
-<link rel="stylesheet" href="loja.css?v=2">
+<link rel="stylesheet" href="loja.css?v=3">
 </head>
 <body>
 <a class="da-skip" href="#conteudo">Pular para o conteúdo</a>
@@ -67,6 +67,16 @@
       <div class="lj-grade" id="lj-produtos" role="radiogroup" aria-label="VIPs">
         <p class="lj-carregando">Carregando VIPs...</p>
       </div>
+    </div>
+  </section>
+
+  <section id="kits">
+    <div class="wrap">
+      <div class="sec-h">
+        <div><span class="da-sec-tag">O que vem no kit</span><h2 id="lj-kits-t">Kits</h2></div>
+        <p>Itens de cada kit do VIP escolhido. Os kits VipNB e VipMedico vêm em todos os VIPs. Clique na imagem para ampliar.</p>
+      </div>
+      <div class="lj-kits" id="lj-kits"></div>
     </div>
   </section>
 
@@ -127,6 +137,11 @@
 </footer>
 <div class="hazard" aria-hidden="true"></div>
 
-<script src="loja.js?v=2" defer></script>
+<dialog class="lj-zoom" id="lj-zoom" aria-label="Kit ampliado">
+  <form method="dialog"><button class="lj-zoom-x" aria-label="Fechar">Fechar ✕</button></form>
+  <img alt="" id="lj-zoom-img"><p id="lj-zoom-cap"></p>
+</dialog>
+
+<script src="loja.js?v=3" defer></script>
 </body>
 </html>

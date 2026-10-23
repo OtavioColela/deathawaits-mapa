@@ -40,6 +40,26 @@ const LOJA_API = "https://deathawaits-loja.deathawaitscda.workers.dev";
       grade.appendChild(b);
     });
   }
+  const zoom = $("#lj-zoom");
+  function desenhaKits(p) {
+    const box = $("#lj-kits"); if (!box) return;
+    $("#lj-kits-t").textContent = p ? "Kits do " + p.nome : "Kits";
+    box.innerHTML = "";
+    (p && p.kits || []).forEach((k) => {
+      const f = document.createElement("figure"); f.className = "lj-kit";
+      f.innerHTML = '<button type="button"><img loading="lazy"></button><figcaption><b></b><span></span></figcaption>';
+      const img = $("img", f); img.src = "kits/" + k.img + ".png"; img.alt = k.nome;
+      $("b", f).textContent = k.nome; $("span", f).textContent = k.tempo ? "a cada " + k.tempo : "";
+      $("button", f).addEventListener("click", () => {
+        if (!zoom || !zoom.showModal) return window.open(img.src, "_blank");
+        $("#lj-zoom-img").src = img.src; $("#lj-zoom-img").alt = k.nome; $("#lj-zoom-cap").textContent = k.nome;
+        zoom.showModal();
+      });
+      box.appendChild(f);
+    });
+  }
+  if (zoom) zoom.addEventListener("click", (e) => { if (e.target === zoom) zoom.close(); });
+
   function escolhe(id, rolar) {
     escolhido = id;
     const p = produtos.find((x) => x.id === id);
@@ -47,6 +67,7 @@ const LOJA_API = "https://deathawaits-loja.deathawaitscda.workers.dev";
     $("#lj-r-dias").textContent = p ? p.dias + " dias" : "—";
     $("#lj-r-preco").textContent = p ? brl(p.preco) : "—";
     desenha();
+    desenhaKits(p);
     try { sessionStorage.setItem("lj-vip", id); } catch (e) {}
     if (rolar && window.matchMedia("(max-width: 820px)").matches) $("#comprar").scrollIntoView({ behavior: "smooth" });
   }
