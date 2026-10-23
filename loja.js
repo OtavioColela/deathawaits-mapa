@@ -67,13 +67,14 @@ const LOJA_API = "https://deathawaits-loja.deathawaitscda.workers.dev";
   const mostraErro = (t) => { erro.textContent = t; erro.hidden = !t; };
   nick.addEventListener("input", () => { nick.removeAttribute("aria-invalid"); mostraErro(""); });
 
+  document.querySelectorAll('a[href="#termos"]').forEach((a) => a.addEventListener("click", () => { $(".lj-termos").open = true; }));
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const n = nick.value.trim();
     if (!configurada) return mostraErro("A loja ainda não está aberta.");
     if (!escolhido) return mostraErro("Escolha um VIP.");
     if (!/^[A-Za-z0-9_]{3,16}$/.test(n)) { nick.setAttribute("aria-invalid", "true"); nick.focus(); return mostraErro("Nick inválido: use de 3 a 16 letras, números ou _."); }
-    if (!ok.checked) return mostraErro("Confirme que o nick está certo.");
+    if (!ok.checked) return mostraErro("Confirme o nick e aceite os Termos de Compra.");
     mostraErro(""); btn.disabled = true; btn.textContent = "Abrindo pagamento...";
     try { localStorage.setItem("lj-nick", n); } catch (e) {}
     try {

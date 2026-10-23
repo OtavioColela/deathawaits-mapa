@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="site.css?v=6">
-<link rel="stylesheet" href="loja.css?v=1">
+<link rel="stylesheet" href="loja.css?v=2">
 </head>
 <body>
 <a class="da-skip" href="#conteudo">Pular para o conteúdo</a>
@@ -80,7 +80,7 @@
           <input class="lj-input" id="lj-nick" name="nick" autocomplete="off" autocapitalize="off" spellcheck="false"
                  maxlength="16" placeholder="SeuNick" required pattern="[A-Za-z0-9_]{3,16}">
           <p class="lj-dica">De 3 a 16 letras, números ou _. Confira com atenção: o VIP vai para este nick.</p>
-          <label class="lj-check"><input type="checkbox" id="lj-ok" required> Confirmo que o nick está certo e que entrarei no servidor para receber o VIP.</label>
+          <label class="lj-check"><input type="checkbox" id="lj-ok" required> <span>Confirmo que o nick está certo e li e aceito os <a href="#termos">Termos de Compra</a>.</span></label>
         </div>
         <div class="lj-form-r">
           <span class="da-sec-tag">Passo 3</span>
@@ -96,6 +96,26 @@
       </form>
     </div>
   </section>
+
+  <section id="termos">
+    <div class="wrap">
+      <details class="lj-termos">
+        <summary><span class="da-sec-tag">Leia antes de comprar</span><h2>Termos de Compra</h2></summary>
+        <ol>
+          <li>Ao adquirir um VIP no servidor, o jogador concorda com todos os termos e condições estabelecidos neste documento.</li>
+          <li>A compra de VIP é voluntária e não é reembolsável.</li>
+          <li>O VIP confere ao jogador benefícios adicionais no jogo, conforme detalhado na descrição do VIP adquirido.</li>
+          <li>O servidor se reserva o direito de alterar os benefícios do VIP a qualquer momento, notificando os jogadores sobre as mudanças com antecedência.</li>
+          <li>O jogador é responsável por manter a segurança de sua conta. O compartilhamento de contas não é recomendado e pode resultar na perda de benefícios VIP.</li>
+          <li>A ativação dos benefícios VIP ocorre após a confirmação do pagamento, que pode variar de imediato até 48 horas, dependendo do método de pagamento.</li>
+          <li>O servidor se reserva o direito de modificar estes termos a qualquer momento.</li>
+          <li>Quaisquer alterações serão comunicadas aos jogadores e entrarão em vigor 30 dias após a notificação.</li>
+        </ol>
+        <p>Para dúvidas ou problemas com a compra, abra um ticket no <a href="https://discord.gg/gc73gQfb5F" target="_blank" rel="noopener">Discord</a>. Ao comprar um VIP, o jogador reconhece que leu, entendeu e concorda com os termos acima.</p>
+        <p class="lj-termos-data">DeathAwaits · em vigor desde 16/07/2024</p>
+      </details>
+    </div>
+  </section>
 </main>
 
 <div class="da-divider" aria-hidden="true"></div>
@@ -107,6 +127,6 @@
 </footer>
 <div class="hazard" aria-hidden="true"></div>
 
-<script src="loja.js?v=1" defer></script>
+<script src="loja.js?v=2" defer></script>
 </body>
 </html>

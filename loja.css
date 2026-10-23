@@ -80,3 +80,13 @@
   .lj-carimbo { top: 14px; right: 14px; font-size: 15px; }
 }
 @media (prefers-reduced-motion: reduce) { .lj-card { transition: none; } .lj-card:hover { transform: none; } }
+
+/* termos */
+.lj-check a { color: var(--accent); font-weight: 600; }
+.lj-termos summary { cursor: pointer; list-style: none; display: flex; flex-direction: column; }
+.lj-termos summary::-webkit-details-marker { display: none; }
+.lj-termos summary h2::after { content: " +"; color: var(--accent); }
+.lj-termos[open] summary h2::after { content: " −"; }
+.lj-termos ol { margin: 20px 0 16px; padding-left: 22px; max-width: 46em; display: grid; gap: 8px; }
+.lj-termos p { max-width: 46em; color: var(--muted); }
+.lj-termos-data { font: 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
