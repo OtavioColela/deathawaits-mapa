@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Loja VIP do DeathAwaits: escolha seu VIP, digite seu nick e pague por Pix ou cartão. O VIP é ativado sozinho no servidor.">
+<meta name="theme-color" content="#23261c">
+<title>Loja VIP · DeathAwaits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="loja.css?v=1">
+</head>
+<body>
+<a class="da-skip" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="da-head">
+  <div class="wrap top">
+    <a class="brand" href="index.html"><i aria-hidden="true"></i>DeathAwaits</a>
+    <button class="da-burger" type="button" aria-expanded="false" aria-controls="da-nav" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+    <nav id="da-nav" aria-label="Seções">
+      <a href="index.html#mapa">O mapa</a>
+      <a href="index.html#entrar">Como entrar</a>
+      <a href="index.html#servidor">O servidor</a>
+      <a href="loja.html" aria-current="page">Loja VIP</a>
+      <a class="btn da-nav-cta" href="https://discord.gg/gc73gQfb5F" target="_blank" rel="noopener">Discord</a>
+    </nav>
+  </div>
+</header>
+
+<main id="conteudo">
+  <section class="lj-hero">
+    <div class="wrap">
+      <p class="eyebrow">Requisição de suprimentos · Loja oficial</p>
+      <h1 class="lj-h1">Loja <span>VIP</span></h1>
+      <ol class="lj-passos">
+        <li><b>01</b>Escolha o VIP</li>
+        <li><b>02</b>Digite seu nick</li>
+        <li><b>03</b>Pague por Pix ou cartão</li>
+        <li><b>04</b>O VIP cai sozinho no servidor</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="lj-status" id="status" hidden>
+    <div class="wrap">
+      <div class="lj-recibo" data-st="aguardando" aria-live="polite">
+        <span class="lj-carimbo">Aguardando</span>
+        <h2 class="lj-recibo-t">Conferindo seu pagamento</h2>
+        <p class="lj-recibo-txt">Isso leva alguns segundos.</p>
+        <dl class="lj-recibo-dl">
+          <dt>Nick</dt><dd data-r="nick">—</dd>
+          <dt>VIP</dt><dd data-r="produto">—</dd>
+        </dl>
+        <a class="btn btn-ghost" href="loja.html">Voltar para a loja</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="vips">
+    <div class="wrap">
+      <div class="sec-h">
+        <div><span class="da-sec-tag">Passo 1</span><h2>Escolha o VIP</h2></div>
+        <p>Pagamento seguro pelo Mercado Pago. Se você já tem VIP, os dias são somados.</p>
+      </div>
+      <div class="lj-grade" id="lj-produtos" role="radiogroup" aria-label="VIPs">
+        <p class="lj-carregando">Carregando VIPs...</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="comprar">
+    <div class="wrap">
+      <form class="lj-form" id="lj-form" novalidate>
+        <div class="lj-form-l">
+          <span class="da-sec-tag">Passo 2</span>
+          <h2>Seu nick</h2>
+          <label class="lj-label" for="lj-nick">Nick no servidor (exatamente como você entra)</label>
+          <input class="lj-input" id="lj-nick" name="nick" autocomplete="off" autocapitalize="off" spellcheck="false"
+                 maxlength="16" placeholder="SeuNick" required pattern="[A-Za-z0-9_]{3,16}">
+          <p class="lj-dica">De 3 a 16 letras, números ou _. Confira com atenção: o VIP vai para este nick.</p>
+          <label class="lj-check"><input type="checkbox" id="lj-ok" required> Confirmo que o nick está certo e que entrarei no servidor para receber o VIP.</label>
+        </div>
+        <div class="lj-form-r">
+          <span class="da-sec-tag">Passo 3</span>
+          <div class="lj-resumo">
+            <div><span>VIP</span><b id="lj-r-nome">Nenhum escolhido</b></div>
+            <div><span>Duração</span><b id="lj-r-dias">—</b></div>
+            <div class="lj-resumo-total"><span>Total</span><b id="lj-r-preco">—</b></div>
+          </div>
+          <button class="btn btn-primary lj-btn" type="submit" id="lj-btn">Ir para o pagamento</button>
+          <p class="lj-erro" id="lj-erro" role="alert" hidden></p>
+          <p class="lj-nota">Você vai para a página do Mercado Pago. Depois de aprovado, entre no servidor: o VIP é ativado em até 1 minuto.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<div class="da-divider" aria-hidden="true"></div>
+<footer>
+  <div class="wrap foot">
+    <span>DeathAwaits · servidor de Crafting Dead</span>
+    <span>Problema com a compra? Fale com a equipe no <a href="https://discord.gg/gc73gQfb5F" target="_blank" rel="noopener">Discord</a></span>
+  </div>
+</footer>
+<div class="hazard" aria-hidden="true"></div>
+
+<script src="loja.js?v=1" defer></script>
+</body>
+</html>
