@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="site.css?v=5">
-<link rel="stylesheet" href="mapa.css?v=5">
+<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="mapa.css?v=6">
 <script>
 /* Antes da página pintar: liga as animações (se o usuário não pediu menos movimento)
    e mostra a tela de "boot" uma vez por sessão. Sem JS, o site aparece normal. */
@@ -144,7 +144,7 @@
       <!-- 4. Mapa + dossiê -->
       <div class="mp-grid" data-reveal>
         <div class="mp-mapa">
-          <div class="mp-mapa-h"><span class="mp-flicker">Carta tática · DA-164</span><span class="mp-coord" aria-hidden="true">Grade — · 7 locais</span><button type="button" class="mp-nv-btn" aria-pressed="false"><i aria-hidden="true"></i>Visão noturna</button></div>
+          <div class="mp-mapa-h"><span class="mp-flicker">Carta tática · DA-164</span><span class="mp-coord" aria-hidden="true">Grade — · 10 locais</span><button type="button" class="mp-nv-btn" aria-pressed="false"><i aria-hidden="true"></i>Visão noturna</button></div>
           <div class="mp-canvas">
             <div class="mp-scan" aria-hidden="true"><i class="mp-radar"></i><i class="mp-band"></i></div>
 <div class="mp-stage">
@@ -193,13 +193,13 @@
 <div class="mp-hint" aria-hidden="true"></div>
             <!-- os marcadores (botões) são criados pelo mapa.js a partir de MAPA_CONFIG.locais -->
           </div>
-          <div class="mp-mapa-f"><span>Mapa real do servidor · posições aproximadas · eventos simulados</span><span class="mp-f-desk">Arraste: mover · Ctrl + rolagem: zoom · 2 cliques: ver tudo · Setas: trocar de local</span><span class="mp-f-mob">Dois dedos: mover e zoom · ou toque em Mover</span></div>
+          <div class="mp-mapa-f"><span>Mapa real do servidor · posições marcadas pela equipe · eventos simulados</span><span class="mp-f-desk">Arraste: mover · Ctrl + rolagem: zoom · 2 cliques: ver tudo · Setas: trocar de local</span><span class="mp-f-mob">Dois dedos: mover e zoom · ou toque em Mover</span></div>
         </div>
 
         <aside class="mp-dossie" id="mp-dossie" aria-label="Dossiê do local selecionado" aria-live="polite">
           <div class="mp-dossie-h"><span class="mp-titulo">Dossiê</span><span class="mp-confid">Confidencial</span><button type="button" class="mp-close">Fechar ✕</button></div>
           <div class="mp-dossie-in">
-            <figure class="mp-foto"><img src="safezone.jpg" alt="" width="854" height="480"><span class="mp-carimbo" aria-hidden="true">Risco</span><span class="mp-ampliar" aria-hidden="true">Ampliar</span></figure>
+            <figure class="mp-foto"><img src="safezone.jpg" alt="" width="1280" height="661"><span class="mp-carimbo" aria-hidden="true">Risco</span><span class="mp-ampliar" aria-hidden="true">Ampliar</span></figure>
             <div class="mp-dossie-body">
               <span class="mp-ref mp-mono"></span>
               <h3>Safezone</h3>
@@ -247,7 +247,7 @@
 
     </div>
   </section>
-  <script src="mapa.js?v=5" defer></script>
+  <script src="mapa.js?v=6" defer></script>
 <!-- ================= FIM DA SEÇÃO DO MAPA (copie até aqui) ================= -->
 
 
@@ -421,6 +421,6 @@
   <p class="da-lb-cap"></p>
 </div>
 
-<script src="site.js?v=5" defer></script>
+<script src="site.js?v=6" defer></script>
 </body>
 </html>

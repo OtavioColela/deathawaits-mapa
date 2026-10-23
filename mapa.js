@@ -58,13 +58,16 @@ const MAPA_CONFIG = {
   },
 
   /* ------------------------------------------------------------------
-     LOCAIS DO MAPA
+     LOCAIS DO MAPA (nomes e caixas marcados pela equipe no mapa real)
      x / y = posição em PORCENTAGEM da imagem do mapa (0–100), medida a partir
      do canto superior esquerdo. Ex.: x: 50, y: 50 = centro da imagem.
-     ATENÇÃO: as posições abaixo são PALPITES visuais (não sabemos qual lugar
-     real é qual). Para corrigir: abra a página com ?calibrar=1 no fim do
+     As posições abaixo são o CENTRO de cada caixa que a equipe desenhou no
+     mapa (foto09). Para ajustar: abra a página com ?calibrar=1 no fim do
      endereço (ex.: index.html?calibrar=1#mapa), clique no lugar certo do mapa
      e cole aqui o "x: …, y: …" que foi copiado.
+     tag: lado do nome do local em relação ao ponto: "b" (baixo, padrão),
+          "t" (cima), "l" (esquerda), "r" (direita). Use para não encavalar
+          nomes de locais próximos (Castelo / Capital / Safezone).
      risco: "baixo" | "medio" | "alto" | "extremo"
      loot:  "comum" | "raro" | "militar"
      dominio: texto do clã. Enquanto for placeholder, deixe dominioExemplo: true
@@ -73,34 +76,46 @@ const MAPA_CONFIG = {
      o que realmente acontece no servidor.
      ------------------------------------------------------------------ */
   locais: [
-    { id: "safezone", n: "01", nome: "Safezone", img: "safezone.jpg", x: 84.1, y: 42.5, // palpite: forte murado com praça redonda no centro (leste)
+    { id: "safezone", n: "01", nome: "Safezone", img: "safezone.jpg", x: 62.71, y: 27.01, tag: "b", // caixa "safezone": logo abaixo da Capital, junto ao lago
       risco: "baixo", loot: "comum", dominio: "Ninguém · zona neutra", dominioExemplo: false,
-      alt: "Safezone: praça com caminhões do exército, helicópteros e um prédio do governo ao fundo",
-      lore: "Os últimos caminhões do exército ainda estão estacionados na praça. Aqui dentro dá pra respirar. Lá fora, ninguém vai te esperar." },
-    { id: "base", n: "02", nome: "Base militar", img: "base-hazmat.jpg", x: 10.9, y: 68.4, // palpite: base aérea no litoral oeste, hangar com aviões
-      risco: "extremo", loot: "militar", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
-      alt: "Instalação militar com helicóptero, prédios de concreto e zumbis com roupas hazmat laranja andando pela pista",
-      lore: "O helicóptero de evacuação nunca decolou. A tripulação ainda está na pista, de roupa hazmat e com fome." },
-    { id: "posto", n: "03", nome: "Posto destruído", img: "ruinas-militares.jpg", x: 30.7, y: 17.2, // palpite: complexo vermelho murado no noroeste, perto da pista
-      risco: "alto", loot: "militar", dominio: "Em disputa", dominioExemplo: true,
-      alt: "Vista do alto de uma fortificação militar em ruínas, com jipes, caixas de suprimentos e um helicóptero caído",
-      lore: "Caixas de suprimento lacradas no meio dos escombros. Alguém derrubou aquele helicóptero, e ainda pode estar por perto." },
-    { id: "centro", n: "04", nome: "Centro", img: "cidade.jpg", x: 68.3, y: 16.5, // palpite: maior cidade, densa, no porto do rio (norte)
+      alt: "Safezone: praça cercada com caminhões do exército, hospital, helicópteros e bandeiras do Brasil em volta de um prédio do governo",
+      lore: "Bandeiras do Brasil ainda tremulam sobre a praça. Os caminhões do exército e o hospital são a última coisa organizada que sobrou. Aqui ninguém atira. Lá fora, ninguém te espera." },
+    { id: "capital", n: "02", nome: "Capital", img: "capital.jpg", x: 69.72, y: 16.64, tag: "r", // caixa "capital": a maior cidade, norte
       risco: "alto", loot: "raro", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
-      alt: "Centro de uma cidade com prédios altos, ruas asfaltadas e árvores",
-      lore: "Cada janela é um atirador em potencial. Os andares de cima ainda não foram saqueados, porque quem sobe nem sempre desce." },
-    { id: "bairros", n: "05", nome: "Bairros", img: "bairros.jpg", x: 59.6, y: 60.2, // palpite: cidadezinha em grade de casas (centro-sul)
-      risco: "medio", loot: "comum", dominio: "Sem dono", dominioExemplo: true,
-      alt: "Bairro com dezenas de casas, um viaduto e um arranha-céu ao fundo",
-      lore: "Dezenas de casas, cada uma com uma geladeira, um armário e um morador que não saiu a tempo. Bom lugar pra começar." },
-    { id: "castelo", n: "06", nome: "Castelo", img: "castelo.jpg", x: 60.6, y: 6.7, // palpite: construção cercada por um fosso/anel de água (norte)
+      alt: "Capital: horizonte de arranha-céus com um capitólio de cúpula, um estádio e uma ponte vermelha ao fundo",
+      lore: "Do estádio dá pra ver o capitólio e a ponte vermelha. Cada arranha-céu tem andares que ninguém saqueou, porque quem sobe nem sempre desce." },
+    { id: "castelo", n: "03", nome: "Castelo", img: "castelo.jpg", x: 61.05, y: 6.76, tag: "l", // caixa "castelo": ponto cercado por fosso, topo do mapa
       risco: "medio", loot: "raro", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
       alt: "Castelo de pedra numa ilha cercada por um rio, no meio de uma floresta de pinheiros",
-      lore: "Uma ponte, uma ilha e muralhas de pedra. O melhor esconderijo do mapa, se você conseguir tirar quem já está lá dentro." },
-    { id: "floresta", n: "07", nome: "Floresta e cânion", img: "floresta.jpg", x: 40.5, y: 30, // palpite: mata fechada na margem oeste do rio grande
+      lore: "Uma ponte, um fosso e muralhas de pedra. O melhor esconderijo do mapa, se você conseguir tirar quem já está lá dentro." },
+    { id: "base-radioativa", n: "04", nome: "Base radioativa", img: "base-radioativa.jpg", x: 31.23, y: 18.06, tag: "r", // caixa "base radioativa": quadrado vermelho, noroeste
+      risco: "extremo", loot: "militar", dominio: "Em disputa", dominioExemplo: true,
+      alt: "Base radioativa: complexo murado com galpões e tonéis laranja de material perigoso, visto do alto",
+      lore: "Tonéis laranja empilhados até onde a vista alcança. O contador Geiger não para de estalar, e os mortos daqui andam de roupa hazmat. O melhor loot do mapa cobra caro." },
+    { id: "springfield", n: "05", nome: "Springfield", img: "springfield.jpg", x: 11.4, y: 14.88, tag: "b", // caixa "springfield": cidade no litoral noroeste
+      risco: "medio", loot: "comum", dominio: "Sem dono", dominioExemplo: true,
+      alt: "Springfield: cidade com um posto de controle militar no cruzamento, um prédio de tijolos vermelhos e o mar ao fundo",
+      lore: "O posto de controle no cruzamento ainda tem a cancela abaixada. Os soldados foram embora; o que eles deixaram nas caixas, não." },
+    { id: "prisao", n: "06", nome: "Prisão", img: "prisao.jpg", x: 51.36, y: 42.35, tag: "r", // caixa "prisão": centro do mapa, à beira do rio
+      risco: "alto", loot: "raro", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
+      alt: "Prisão: pátio cercado por muros e grades, com bancos de madeira e blocos de celas ao fundo",
+      lore: "As celas se abriram quando a energia caiu. Os presos não foram longe: ainda rondam o pátio, esperando a próxima visita." },
+    { id: "base-aerea", n: "07", nome: "Base aérea", img: "base-aerea.jpg", x: 91.35, y: 49.09, tag: "l", // caixa "base aérea": pista no leste
+      risco: "alto", loot: "militar", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
+      alt: "Base aérea: estrada ao lado de hangares militares verdes, um helicóptero caído e um quartel de bombeiros",
+      lore: "Hangares verdes, um helicóptero no chão e a pista vazia. A evacuação saiu daqui, e quem ficou para trás ainda guarda as armas." },
+    { id: "tacoma", n: "08", nome: "Tacoma", img: "tacoma.jpg", x: 59.87, y: 60.56, tag: "b", // caixa "tacoma": cidade em grade, centro-sul
+      risco: "medio", loot: "comum", dominio: "Sem dono", dominioExemplo: true,
+      alt: "Tacoma: cruzamento com um tanque abandonado, um prédio com cúpula e uma bandeira entre prédios de apartamentos",
+      lore: "Um tanque parado no cruzamento, sem combustível e sem tripulação. As ruas em grade parecem calmas. É exatamente isso que preocupa." },
+    { id: "aeroporto", n: "09", nome: "Aeroporto", img: "aeroporto.jpg", x: 11.62, y: 68.21, tag: "b", // caixa "aeroporto": litoral oeste
+      risco: "medio", loot: "raro", dominio: "[TAG] Clã de exemplo", dominioExemplo: true,
+      alt: "Aeroporto: terminal com aviões estacionados, carrinhos de bagagem e a torre de controle à beira-mar",
+      lore: "O último voo nunca saiu. As malas continuam na esteira, os aviões no pátio, e a torre de controle ainda enxerga tudo até o mar." },
+    { id: "residencial", n: "10", nome: "Residencial", img: "residencial.jpg", x: 16.67, y: 77.97, tag: "r", // caixa "residencial": sudoeste, abaixo do aeroporto
       risco: "baixo", loot: "comum", dominio: "Sem dono", dominioExemplo: true,
-      alt: "Rio correndo num cânion de pedra no meio de uma floresta de pinheiros",
-      lore: "Pinheiros fechados e um rio no fundo do cânion. Ninguém te vê aqui, mas você também não vê quem está te seguindo." }
+      alt: "Residencial: rua de casas grandes com telhados cinza no meio de uma floresta",
+      lore: "Casas grandes, garagens fechadas e despensas cheias. Bom lugar pra começar, desde que você feche a porta ao entrar." }
   ],
 
   links: {
@@ -154,7 +169,7 @@ const MAPA_CONFIG = {
   C.locais.forEach((l, i) => {
     const b = document.createElement("button");
     b.style.setProperty("--d", (0.7 + i * 0.16).toFixed(2) + "s");
-    b.type = "button"; b.className = "mp-marker"; b.dataset.id = l.id; b.dataset.risco = l.risco;
+    b.type = "button"; b.className = "mp-marker"; b.dataset.id = l.id; b.dataset.risco = l.risco; b.dataset.tag = l.tag || "b";
     b.style.left = pctX(l.x); b.style.top = pctY(l.y);
     b.setAttribute("aria-pressed", "false"); b.setAttribute("aria-controls", "mp-dossie");
     b.setAttribute("aria-label", `${l.nome}: risco ${RISCO[l.risco][0]}, loot ${LOOT[l.loot]}`);
@@ -164,7 +179,7 @@ const MAPA_CONFIG = {
     const li = document.createElement("li");
     li.className = "mp-card"; li.dataset.id = l.id; li.dataset.risco = l.risco;
     li.setAttribute("data-reveal", ""); li.style.setProperty("--d", (i * 0.07).toFixed(2) + "s");
-    li.innerHTML = `<button type="button" aria-pressed="false" aria-controls="mp-dossie"><div class="mp-thumb"><img src="${img(l.img)}" alt="${esc(l.alt)}" loading="lazy" width="320" height="200"></div><span>Registro ${l.n} · ${RISCO[l.risco][0]}<b>${esc(l.nome)}</b></span></button>`;
+    li.innerHTML = `<button type="button" aria-pressed="false" aria-controls="mp-dossie"><div class="mp-thumb"><img src="${img(l.img)}" alt="${esc(l.alt)}" loading="lazy" width="1280" height="661"></div><span>Registro ${l.n} · ${RISCO[l.risco][0]}<b>${esc(l.nome)}</b></span></button>`;
     cards.appendChild(li);
   });
 
@@ -358,7 +373,7 @@ const MAPA_CONFIG = {
   if (S.modoExemplo) pintaStatus(S.exemplo, true);
   else { pintaStatus({}, false); atualizaStatus(); setInterval(atualizaStatus, Math.max(30, S.atualizarACadaSeg) * 1000); }
 
-  /* ---------- início (aceita link direto: #mapa-base, #mapa-castelo...) ---------- */
+  /* ---------- início (aceita link direto: #mapa-capital, #mapa-castelo...) ---------- */
   const hash = location.hash.replace("#mapa-", "");
   const inicial = C.locais.some((l) => l.id === hash) ? hash : "safezone";
   fixado = inicial; marcar(inicial); render(inicial, false);
@@ -550,7 +565,7 @@ const MAPA_CONFIG = {
     const mx = (e.clientX - r.left - view.tx) / view.z / W * 1000, my = (e.clientY - r.top - view.ty) / view.z / H * MH;
     if (mx >= 0 && my >= 0 && mx <= 1000 && my <= MH) coordEl.textContent = coordTxt(mx, my);
   }
-  canvas.addEventListener("mouseleave", () => { if (coordEl) coordEl.textContent = "Grade — · 7 locais"; });
+  canvas.addEventListener("mouseleave", () => { if (coordEl) coordEl.textContent = `Grade — · ${C.locais.length} locais`; });
 
   /* ---------- rota tracejada da safezone até o local ---------- */
   const rotaG = $(".mp-route"), rotaLinha = $(".mp-route-line"), rotaGlow = $(".mp-route-glow"), rotaMask = $(".mp-route-mask"), rotaFim = $(".mp-route-end");
@@ -691,7 +706,7 @@ const MAPA_CONFIG = {
     f.animate && f.animate([{ opacity: 0.95, transform: "scale(.5)" }, { opacity: 0, transform: "scale(2.4)" }], { duration: 900, easing: "ease-out" });
   }
   // helicóptero: laço entre a safezone e a base militar
-  const BASE = LOC.base || SAFE;
+  const BASE = LOC["base-aerea"] || SAFE; // heli: Safezone <-> Base aérea
   const hc = [(SAFE.x + BASE.x) / 2, (SAFE.y + BASE.y) / 2], hv = [BASE.x - SAFE.x, BASE.y - SAFE.y], hl = Math.hypot(hv[0], hv[1]) || 1;
   const hu = [hv[0] / hl, hv[1] / hl], hn = [-hu[1], hu[0]], HA = hl / 2 + 30, HB = Math.max(58, hl * 0.12);
   function poeEnt(el, mx, my, ang, dx = 0, dy = 0) {
