@@ -121,6 +121,9 @@ const MAPA_CONFIG = {
 
   /* ---------- marcadores e cards ---------- */
   const canvas = $(".mp-canvas");
+  const stage = $(".mp-stage") || canvas;
+  // ganchos do "mapa vivo" (v4), preenchidos no fim do arquivo
+  const hooks = { linha() {}, rota() {}, foco() {} };
   const cards = $(".mp-cards");
   C.locais.forEach((l, i) => {
     const b = document.createElement("button");
@@ -129,8 +132,8 @@ const MAPA_CONFIG = {
     b.style.left = (l.x / 10) + "%"; b.style.top = (l.y / 6.2) + "%";
     b.setAttribute("aria-pressed", "false"); b.setAttribute("aria-controls", "mp-dossie");
     b.setAttribute("aria-label", `${l.nome}: risco ${RISCO[l.risco][0]}, loot ${LOOT[l.loot]}`);
-    b.innerHTML = `<span class="mp-ring" aria-hidden="true"></span><span class="mp-lock" aria-hidden="true"></span><span class="mp-pin" aria-hidden="true"></span><span class="mp-tag" aria-hidden="true"><b>${l.n}</b>${esc(l.nome)}</span>`;
-    canvas.appendChild(b);
+    b.innerHTML = `<span class="mp-ring" aria-hidden="true"></span><span class="mp-lock" aria-hidden="true"></span><span class="mp-pin" aria-hidden="true"></span><span class="mp-flash" aria-hidden="true"></span><span class="mp-tag" aria-hidden="true"><b>${l.n}</b>${esc(l.nome)}</span>`;
+    stage.appendChild(b);
 
     const li = document.createElement("li");
     li.className = "mp-card"; li.dataset.id = l.id; li.dataset.risco = l.risco;
@@ -190,6 +193,7 @@ const MAPA_CONFIG = {
       const body = $(".mp-dossie-in", dossie);
       body.classList.remove("mp-swap"); void body.offsetWidth; body.classList.add("mp-swap");
     }
+    hooks.linha();
   }
 
   function marcar(id) {
@@ -199,6 +203,7 @@ const MAPA_CONFIG = {
 
   function selecionar(id, origem) {
     fixado = id; marcar(id); render(id);
+    if (origem !== "init") { hooks.foco(id); hooks.rota(id); }
     if (mobile.matches && origem !== "init") abrirSheet(origem);
     if (history.replaceState && origem !== "init") history.replaceState(null, "", "#mapa-" + id);
   }
@@ -230,11 +235,12 @@ const MAPA_CONFIG = {
   // hover = prévia (só desktop com mouse); ao sair do mapa volta ao fixado
   canvas.addEventListener("mouseover", (e) => {
     const m = e.target.closest(".mp-marker");
-    if (m && hoverOk.matches && !mobile.matches && m.dataset.id !== dossie.dataset.preview) { dossie.dataset.preview = m.dataset.id; render(m.dataset.id); }
+    if (m && hoverOk.matches && !mobile.matches && m.dataset.id !== dossie.dataset.preview) { dossie.dataset.preview = m.dataset.id; render(m.dataset.id); hooks.rota(m.dataset.id); }
   });
   canvas.addEventListener("mouseleave", () => {
-    if (dossie.dataset.preview && dossie.dataset.preview !== fixado) render(fixado);
+    const tinha = dossie.dataset.preview;
     delete dossie.dataset.preview;
+    if (tinha && tinha !== fixado) { render(fixado); hooks.rota(fixado); }
   });
   // teclado: setas percorrem os locais, Esc fecha o sheet
   canvas.addEventListener("keydown", (e) => {
@@ -363,4 +369,333 @@ const MAPA_CONFIG = {
     b.style.setProperty("--ry", (x * 10).toFixed(2) + "deg"); b.style.setProperty("--rx", (-y * 10).toFixed(2) + "deg");
   });
   cards.addEventListener("pointerout", (e) => { const b = e.target.closest(".mp-card button"); if (b && !b.contains(e.relatedTarget)) { b.style.removeProperty("--rx"); b.style.removeProperty("--ry"); } });
+  /* =====================================================================
+     v4 · MAPA VIVO
+     - animações contínuas: radar, helicóptero, veículos, hordas, airdrop
+     - zoom/arrasto (mouse, Ctrl+rolagem, 2 dedos, botões), foco no local
+     - rota tracejada até o local, coordenadas, visão noturna,
+       linha do marcador até o dossiê
+     Tudo pausa fora da tela e com a aba escondida; nada se mexe sozinho
+     com "reduzir movimento". Eventos (hordas, airdrop, veículos) são
+     SIMULAÇÕES visuais, não dados do servidor.
+     ===================================================================== */
+  if (stage === canvas) return; // HTML antigo sem .mp-stage: mantém só o básico
+  const mapaEl = mapaBox;
+  const grid = $(".mp-grid");
+  const LOC = Object.fromEntries(C.locais.map((l) => [l.id, l]));
+  const SAFE = LOC.safezone || C.locais[0];
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  let W = stage.offsetWidth || 1, H = stage.offsetHeight || 1;
+  const px = (mx, my) => [mx / 1000 * W, my / 620 * H];
+
+  /* ---------- zoom / arrasto ---------- */
+  const view = { z: 1, tx: 0, ty: 0 };
+  const ZMAX = 3;
+  const btnIn = $(".mp-zin"), btnOut = $(".mp-zout"), btnReset = $(".mp-zreset"), btnMover = $(".mp-mover");
+  function clampView() {
+    view.z = clamp(view.z, 1, ZMAX);
+    view.tx = clamp(view.tx, W - W * view.z, 0); view.ty = clamp(view.ty, H - H * view.z, 0);
+  }
+  function aplica(suave) {
+    stage.classList.toggle("is-ease", !!suave && anima());
+    stage.style.transform = view.z === 1 && !view.tx && !view.ty ? "" : `translate(${view.tx.toFixed(1)}px, ${view.ty.toFixed(1)}px) scale(${view.z.toFixed(4)})`;
+    stage.style.setProperty("--iz", Math.pow(view.z, -0.8).toFixed(3));
+    const zoom = view.z > 1.01;
+    mapaEl.classList.toggle("is-zoom", zoom);
+    if (!zoom) mapaEl.classList.remove("is-foco");
+    btnOut.disabled = !zoom; btnReset.disabled = !zoom; btnIn.disabled = view.z >= ZMAX - 0.01;
+    if (suave && anima()) seguirLinha(950); else atualizaLinha();
+  }
+  function zoomEm(z, cx, cy, suave) { // (cx, cy) = ponto que fica parado, em px do mapa
+    const k = clamp(z, 1, ZMAX) / view.z;
+    view.tx = cx - (cx - view.tx) * k; view.ty = cy - (cy - view.ty) * k; view.z *= k;
+    clampView(); aplica(suave);
+  }
+  function focoEm(id) {
+    const l = LOC[id]; if (!l || !anima()) return; // com menos movimento não dá zoom sozinho
+    const z = mobile.matches ? 1.7 : 1.9, [x, y] = px(l.x, l.y);
+    view.z = z; view.tx = W / 2 - x * z; view.ty = H / 2 - y * z; clampView(); aplica(true);
+    mapaEl.classList.add("is-foco");
+  }
+  function resetView() { view.z = 1; view.tx = 0; view.ty = 0; aplica(true); }
+  btnIn.addEventListener("click", () => zoomEm(view.z * 1.45, W / 2, H / 2, true));
+  btnOut.addEventListener("click", () => zoomEm(view.z / 1.45, W / 2, H / 2, true));
+  btnReset.addEventListener("click", resetView);
+  canvas.addEventListener("keydown", (e) => {
+    if (!e.target.closest(".mp-marker, .mp-ctrl")) return;
+    if (e.key === "+" || e.key === "=") { e.preventDefault(); zoomEm(view.z * 1.45, W / 2, H / 2, true); }
+    else if (e.key === "-" || e.key === "_") { e.preventDefault(); zoomEm(view.z / 1.45, W / 2, H / 2, true); }
+    else if (e.key === "0") { e.preventDefault(); resetView(); }
+  });
+  canvas.addEventListener("dblclick", (e) => { if (!e.target.closest(".mp-marker, .mp-ctrl")) resetView(); });
+
+  // dica (ex.: rolagem sem Ctrl) — no máximo a cada 4 s
+  const hint = $(".mp-hint"); let hintT = 0, hintUlt = 0;
+  function dica(txt) {
+    const t = performance.now(); if (t - hintUlt < 4000) return; hintUlt = t;
+    hint.textContent = txt; hint.classList.add("is-on"); clearTimeout(hintT); hintT = setTimeout(() => hint.classList.remove("is-on"), 1500);
+  }
+  // rolagem: só dá zoom com Ctrl/⌘ (pinça do trackpad também chega assim); senão a página rola normal
+  canvas.addEventListener("wheel", (e) => {
+    if (!(e.ctrlKey || e.metaKey)) { if (hoverOk.matches) dica("Ctrl + rolagem para dar zoom"); return; }
+    e.preventDefault();
+    const r = canvas.getBoundingClientRect();
+    zoomEm(view.z * Math.exp(-clamp(e.deltaY, -60, 60) * 0.006), e.clientX - r.left, e.clientY - r.top, false);
+  }, { passive: false });
+
+  // arrastar com mouse/caneta
+  let drag = null, arrastou = false;
+  canvas.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "touch" || e.button !== 0 || e.target.closest(".mp-ctrl")) return;
+    drag = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty, id: e.pointerId, on: false }; arrastou = false;
+  });
+  canvas.addEventListener("pointermove", (e) => {
+    coord(e);
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.on) {
+      if (Math.hypot(dx, dy) < 6) return;
+      drag.on = true; arrastou = true; mapaEl.classList.add("is-drag");
+      try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+      if (view.z <= 1.01) dica("Aproxime (+) para arrastar");
+    }
+    view.tx = drag.tx + dx; view.ty = drag.ty + dy; clampView(); aplica(false);
+  });
+  const fimDrag = () => { if (drag && drag.on) mapaEl.classList.remove("is-drag"); drag = null; };
+  canvas.addEventListener("pointerup", fimDrag); canvas.addEventListener("pointercancel", fimDrag);
+  canvas.addEventListener("click", (e) => { if (arrastou) { e.stopPropagation(); e.preventDefault(); arrastou = false; } }, true);
+
+  // toque: 1 dedo rola a página (a não ser com "Mover" ligado); 2 dedos movem e dão zoom
+  let toque = null, moverModo = false;
+  function gesto(ts) {
+    const r = canvas.getBoundingClientRect();
+    const p = Array.from(ts).slice(0, 2).map((t) => [t.clientX - r.left, t.clientY - r.top]);
+    const c = p.length === 2 ? [(p[0][0] + p[1][0]) / 2, (p[0][1] + p[1][1]) / 2] : p[0];
+    const d = p.length === 2 ? Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]) : 0;
+    return { c, d, n: p.length, z: view.z, tx: view.tx, ty: view.ty };
+  }
+  canvas.addEventListener("touchstart", (e) => {
+    if (e.target.closest(".mp-ctrl")) return;
+    if (e.touches.length >= 2) { if (e.cancelable) e.preventDefault(); toque = gesto(e.touches); }
+    else if (moverModo) toque = gesto(e.touches);
+  }, { passive: false });
+  canvas.addEventListener("touchmove", (e) => {
+    if (!toque) return;
+    if (Math.min(e.touches.length, 2) !== toque.n) { toque = gesto(e.touches); return; }
+    if (e.cancelable) e.preventDefault();
+    const g = gesto(e.touches);
+    const z = clamp(toque.n === 2 && toque.d > 0 ? toque.z * g.d / toque.d : toque.z, 1, ZMAX), k = z / toque.z;
+    view.z = z; view.tx = g.c[0] - (toque.c[0] - toque.tx) * k; view.ty = g.c[1] - (toque.c[1] - toque.ty) * k;
+    clampView(); aplica(false);
+  }, { passive: false });
+  const fimToque = (e) => { if (!toque) return; toque = e.touches.length >= 2 || (moverModo && e.touches.length) ? gesto(e.touches) : null; };
+  canvas.addEventListener("touchend", fimToque); canvas.addEventListener("touchcancel", fimToque);
+  btnMover.addEventListener("click", () => {
+    moverModo = !moverModo; btnMover.setAttribute("aria-pressed", String(moverModo));
+    canvas.classList.toggle("is-mover", moverModo);
+    if (moverModo && view.z <= 1.01) zoomEm(1.6, W / 2, H / 2, true);
+  });
+
+  /* ---------- coordenadas no cabeçalho ---------- */
+  const coordEl = $(".mp-coord");
+  const coordTxt = (mx, my) => `Grade ${quadrante({ x: clamp(mx, 0, 999), y: clamp(my, 0, 599) })} · ${String(Math.round(mx)).padStart(3, "0")} / ${String(Math.round(my)).padStart(3, "0")}`;
+  function coord(e) {
+    if (!coordEl || e.pointerType === "touch") return;
+    const r = canvas.getBoundingClientRect();
+    const mx = (e.clientX - r.left - view.tx) / view.z / W * 1000, my = (e.clientY - r.top - view.ty) / view.z / H * 620;
+    if (mx >= 0 && my >= 0 && mx <= 1000 && my <= 620) coordEl.textContent = coordTxt(mx, my);
+  }
+  canvas.addEventListener("mouseleave", () => { if (coordEl) coordEl.textContent = "Grade — · 7 locais"; });
+
+  /* ---------- rota tracejada da safezone até o local ---------- */
+  const rotaG = $(".mp-route"), rotaLinha = $(".mp-route-line"), rotaGlow = $(".mp-route-glow"), rotaMask = $(".mp-route-mask"), rotaFim = $(".mp-route-end");
+  const rotaLbl = $(".mp-route-lbl");
+  let rotaId = null;
+  function rota(id) {
+    const l = LOC[id];
+    if (!l || l === SAFE || (filtro !== "todos" && l.risco !== filtro)) { rotaG.classList.remove("is-on"); rotaLbl.classList.remove("is-on"); rotaId = null; return; }
+    if (id === rotaId) return; rotaId = id;
+    const x0 = SAFE.x, y0 = SAFE.y, x1 = l.x, y1 = l.y, dx = x1 - x0, dy = y1 - y0, len = Math.hypot(dx, dy);
+    const cx = (x0 + x1) / 2 - dy * 0.2, cy = (y0 + y1) / 2 + dx * 0.2;
+    const d = `M${x0} ${y0}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x1} ${y1}`;
+    [rotaLinha, rotaGlow, rotaMask].forEach((p) => p.setAttribute("d", d));
+    rotaFim.setAttribute("cx", x1); rotaFim.setAttribute("cy", y1);
+    const blocos = Math.max(50, Math.round(len * 2.4 / 50) * 50); // escala ILUSTRATIVA (o mapa é fora de escala)
+    rotaLbl.innerHTML = `~${blocos.toLocaleString("pt-BR")} blocos<small>ilustrativo</small>`;
+    const lx = 0.25 * x0 + 0.5 * cx + 0.25 * x1, ly = 0.25 * y0 + 0.5 * cy + 0.25 * y1;
+    rotaLbl.style.left = lx / 10 + "%"; rotaLbl.style.top = ly / 6.2 + "%";
+    rotaG.classList.add("is-on"); rotaLbl.classList.add("is-on");
+    if (anima() && rotaMask.animate) rotaMask.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 650, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
+    else rotaMask.style.strokeDashoffset = "0";
+  }
+  canvas.addEventListener("focusin", (e) => {
+    const m = e.target.closest(".mp-marker"); if (!m) return;
+    rota(m.dataset.id);
+    const l = LOC[m.dataset.id]; if (coordEl && l) coordEl.textContent = coordTxt(l.x, l.y);
+  });
+  canvas.addEventListener("focusout", (e) => { if (!canvas.contains(e.relatedTarget)) rota(fixado); });
+
+  /* ---------- linha do marcador até o dossiê (desktop) ---------- */
+  const link = $(".mp-link"), linkPath = link && link.querySelector("path"), linkA = link && link.querySelector(".a"), linkB = link && link.querySelector(".b");
+  function atualizaLinha() {
+    if (!link) return;
+    const id = dossie.dataset.preview || fixado, m = $(`.mp-marker[data-id="${id}"]`);
+    if (mobile.matches || !mapaEl.classList.contains("is-in") || !m || m.classList.contains("is-off")) { link.classList.remove("is-on"); return; }
+    const g = grid.getBoundingClientRect(), mr = m.getBoundingClientRect(), cr = canvas.getBoundingClientRect(), dr = dossie.getBoundingClientRect();
+    const x0 = mr.left + mr.width / 2, y0 = mr.top + mr.height / 2;
+    if (x0 < cr.left + 4 || x0 > cr.right - 4 || y0 < cr.top + 4 || y0 > cr.bottom - 4 || dr.left < cr.right) { link.classList.remove("is-on"); return; }
+    const x1 = dr.left, y1 = clamp(y0, dr.top + 50, dr.bottom - 40), xm = cr.right + (dr.left - cr.right) / 2;
+    const r = Math.min(10, Math.abs(y1 - y0) / 2), sy = y1 > y0 ? 1 : -1;
+    const X0 = x0 - g.left, Y0 = y0 - g.top, XM = xm - g.left, Y1 = y1 - g.top, X1 = x1 - g.left;
+    linkPath.setAttribute("d", r < 1 ? `M${X0} ${Y0}H${X1}` : `M${X0} ${Y0}H${XM - r}Q${XM} ${Y0} ${XM} ${Y0 + r * sy}V${Y1 - r * sy}Q${XM} ${Y1} ${XM + r} ${Y1}H${X1}`);
+    linkA.setAttribute("cx", X0); linkA.setAttribute("cy", Y0); linkB.setAttribute("cx", X1); linkB.setAttribute("cy", Y1);
+    link.style.setProperty("--r", `var(--mp-${LOC[id].risco})`);
+    link.classList.add("is-on");
+  }
+  let linhaAte = 0, linhaRaf = 0;
+  function seguirLinha(ms) {
+    linhaAte = performance.now() + ms;
+    if (linhaRaf) return;
+    const f = (t) => { atualizaLinha(); linhaRaf = t < linhaAte ? requestAnimationFrame(f) : 0; };
+    linhaRaf = requestAnimationFrame(f);
+  }
+  addEventListener("resize", () => seguirLinha(200));
+
+  /* ---------- filtro também apaga zonas e rota ---------- */
+  $(".mp-filtro").addEventListener("click", () => {
+    $$(".mp-zonas [data-id]").forEach((z) => z.classList.toggle("is-off", filtro !== "todos" && LOC[z.dataset.id].risco !== filtro));
+    rotaId = null; rota(fixado); atualizaLinha();
+  });
+
+  /* ---------- tamanho ---------- */
+  const mede = () => {
+    const w = stage.offsetWidth || 1, h = stage.offsetHeight || 1; if (w === W && h === H) return;
+    const k = w / W; view.tx *= k; view.ty *= k; W = w; H = h; clampView(); aplica(false);
+  };
+  if ("ResizeObserver" in window) new ResizeObserver(mede).observe(stage); else addEventListener("resize", mede);
+
+  /* ---------- visão noturna ---------- */
+  const nvBtn = $(".mp-nv-btn");
+  nvBtn.addEventListener("click", () => {
+    const on = !mapaEl.classList.contains("is-nv");
+    mapaEl.classList.toggle("is-nv", on); nvBtn.setAttribute("aria-pressed", String(on));
+  });
+
+  hooks.linha = atualizaLinha;
+  hooks.rota = rota;
+  hooks.foco = focoEm;
+
+  /* ---------- animação contínua (um único requestAnimationFrame) ---------- */
+  if (!anima()) { const ini = () => (mapaEl.classList.contains("is-in") ? (rota(fixado), atualizaLinha()) : setTimeout(ini, 300)); ini(); return; }
+  const fxOver = $(".mp-fx-over");
+  const sweep = $(".mp-sweep", fxOver), heli = $(".mp-heli", fxOver), heliSh = $(".mp-heli-sh", fxOver);
+  const aviao = $(".mp-aviao", fxOver), aviaoSh = $(".mp-aviao-sh", fxOver);
+  const blips = $(".mp-blips", fxOver), drops = $(".mp-drops", fxOver), carrosBox = $(".mp-carros", fxOver);
+  const PERIODO = 7000; // uma volta do radar
+  const bearing = (l) => (Math.atan2(l.x - SAFE.x, -(l.y - SAFE.y)) * 180 / Math.PI + 360) % 360;
+  const alvos = C.locais.filter((l) => l !== SAFE).map((l) => ({ l, b: bearing(l) }));
+  const passou = (a0, a1, b) => (a0 <= a1 ? b > a0 && b <= a1 : b > a0 || b <= a1);
+  function pingMarker(id) {
+    const m = $(`.mp-marker[data-id="${id}"]`); if (!m || m.classList.contains("is-off")) return;
+    const f = m.querySelector(".mp-flash");
+    f.animate && f.animate([{ opacity: 0.95, transform: "scale(.5)" }, { opacity: 0, transform: "scale(2.4)" }], { duration: 900, easing: "ease-out" });
+  }
+  // helicóptero: laço entre a safezone e a base militar
+  const BASE = LOC.base || SAFE;
+  const hc = [(SAFE.x + BASE.x) / 2, (SAFE.y + BASE.y) / 2], hv = [BASE.x - SAFE.x, BASE.y - SAFE.y], hl = Math.hypot(hv[0], hv[1]) || 1;
+  const hu = [hv[0] / hl, hv[1] / hl], hn = [-hu[1], hu[0]], HA = hl / 2 + 30, HB = 58;
+  function poeEnt(el, mx, my, ang, dx = 0, dy = 0) {
+    const [x, y] = px(mx, my);
+    el.style.transform = `translate(${(x + dx).toFixed(1)}px, ${(y + dy).toFixed(1)}px) translate(-50%, -50%) rotate(${ang.toFixed(1)}deg)`;
+  }
+  // veículos nas estradas (vão e voltam)
+  const carros = ["mp-v1", "mp-v2", "mp-v3", "mp-v4"].map((id, i) => {
+    const path = document.getElementById(id); if (!path || !path.getTotalLength) return null;
+    const el = document.createElement("i"); el.className = "mp-carro"; carrosBox.appendChild(el);
+    const len = path.getTotalLength();
+    return { path, len, el, s: rnd(0, len), dir: i % 2 ? -1 : 1, v: rnd(26, 40), espera: 0 };
+  }).filter(Boolean);
+  // hordas: mais frequentes perto das zonas Extremo/Alto
+  const PESO = { extremo: 6, alto: 3, medio: 1.4, baixo: 0.5 };
+  const zonasBlip = C.locais.filter((l) => l !== SAFE).map((l) => [l, PESO[l.risco] || 1]);
+  const somaPeso = zonasBlip.reduce((a, z) => a + z[1], 0);
+  function novoBlip() {
+    if (blips.childElementCount >= 7) return;
+    let r = Math.random() * somaPeso, l = zonasBlip[0][0];
+    for (const [z, w] of zonasBlip) { if ((r -= w) <= 0) { l = z; break; } }
+    const x = clamp(l.x + rnd(-75, 75), 20, 980), y = clamp(l.y + rnd(-60, 60), 20, 600);
+    const el = document.createElement("i"); el.className = "mp-blip";
+    el.style.left = x / 10 + "%"; el.style.top = y / 6.2 + "%";
+    el.style.setProperty("--wx", (rnd(-1, 1) * W * 0.03).toFixed(1) + "px"); el.style.setProperty("--wy", (rnd(-1, 1) * W * 0.02).toFixed(1) + "px");
+    if (Math.random() < 0.35) el.innerHTML = "<b>contato</b>";
+    el.addEventListener("animationend", (e) => { if (e.target === el) el.remove(); });
+    blips.appendChild(el);
+  }
+  // airdrop: avião cruza o mapa e solta uma caixa num ponto aleatório (~a cada 20 s)
+  let voo = null;
+  function novoVoo(t) {
+    const daEsq = Math.random() < 0.5, y0 = rnd(90, 530), y1 = clamp(y0 + rnd(-110, 110), 60, 560);
+    voo = { t0: t, dur: 7000, x0: daEsq ? -70 : 1070, x1: daEsq ? 1070 : -70, y0, y1, f: rnd(0.32, 0.68), solto: false };
+    voo.ang = Math.atan2(y1 - y0, voo.x1 - voo.x0) * 180 / Math.PI;
+    aviao.classList.add("is-on"); aviaoSh.classList.add("is-on");
+  }
+  function soltaCaixa(x, y) {
+    const el = document.createElement("span"); el.className = "mp-drop";
+    el.style.left = x / 10 + "%"; el.style.top = y / 6.2 + "%";
+    el.innerHTML = '<i class="mp-drop-sh"></i><i class="mp-drop-pulse"></i><span class="mp-drop-box"><i class="mp-drop-chute"></i></span><b class="mp-drop-lbl">Airdrop</b>';
+    el.addEventListener("animationend", (e) => { if (e.target === el) el.remove(); });
+    drops.appendChild(el);
+  }
+
+  // evita soltar a caixa em cima de um marcador/rótulo (mantém o "AIRDROP" legível)
+  const longeDosLocais = (x, y) => x > 60 && x < 940 && y > 50 && y < 570 && C.locais.every((l) => Math.hypot(l.x - x, (l.y + 30) - y) > 105);
+  let live = false, raf = 0, ult = 0, relogio = 0, proxBlip = 1200, proxDrop = 4500;
+  function quadro(t) {
+    const dt = Math.min(64, t - (ult || t)); ult = t; relogio += dt;
+    // radar
+    const a1 = (relogio / PERIODO * 360) % 360, a0 = ((relogio - dt) / PERIODO * 360 + 360) % 360;
+    sweep.style.transform = `translate(-50%, -50%) rotate(${a1.toFixed(2)}deg)`;
+    for (const { l, b } of alvos) if (passou(a0, a1, b)) pingMarker(l.id);
+    // helicóptero
+    const th = relogio / 26000 * Math.PI * 2, c = Math.cos(th), s = Math.sin(th);
+    const hx = hc[0] + hu[0] * HA * c + hn[0] * HB * s, hy = hc[1] + hu[1] * HA * c + hn[1] * HB * s;
+    const dxh = -hu[0] * HA * s + hn[0] * HB * c, dyh = -hu[1] * HA * s + hn[1] * HB * c, ah = Math.atan2(dyh, dxh) * 180 / Math.PI;
+    poeEnt(heli, hx, hy, ah); poeEnt(heliSh, hx, hy, ah, W * 0.014, W * 0.02);
+    // veículos
+    for (const v of carros) {
+      if (v.espera > 0) { v.espera -= dt; continue; }
+      v.s += v.dir * v.v * dt / 1000;
+      if (v.s <= 0 || v.s >= v.len) { v.s = clamp(v.s, 0, v.len); v.dir *= -1; v.espera = rnd(600, 2200); }
+      const p = v.path.getPointAtLength(v.s), q = v.path.getPointAtLength(clamp(v.s + v.dir * 3, 0, v.len));
+      poeEnt(v.el, p.x, p.y, Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI);
+    }
+    // hordas
+    if (relogio >= proxBlip) { novoBlip(); proxBlip = relogio + rnd(900, 2600); }
+    // airdrop
+    if (!voo && relogio >= proxDrop) novoVoo(relogio);
+    if (voo) {
+      const k = (relogio - voo.t0) / voo.dur, x = voo.x0 + (voo.x1 - voo.x0) * k, y = voo.y0 + (voo.y1 - voo.y0) * k;
+      poeEnt(aviao, x, y, voo.ang); poeEnt(aviaoSh, x, y, voo.ang, W * 0.03, W * 0.045);
+      if (!voo.solto && k >= voo.f && (k > 0.9 || longeDosLocais(x, y))) { voo.solto = true; soltaCaixa(clamp(x, 60, 940), clamp(y, 50, 570)); }
+      if (k >= 1) { aviao.classList.remove("is-on"); aviaoSh.classList.remove("is-on"); proxDrop = voo.t0 + 20000; voo = null; }
+    }
+    raf = requestAnimationFrame(quadro);
+  }
+  let naTela = false, introOk = false;
+  function ajustaLive() {
+    const v = naTela && introOk && !document.hidden && anima();
+    if (v === live) return; live = v;
+    mapaEl.classList.toggle("is-live", v);
+    if (v) { ult = 0; raf = requestAnimationFrame(quadro); } else cancelAnimationFrame(raf);
+  }
+  mapaEl.classList.add("is-live"); // a intro roda normalmente
+  const ioVivo = new IntersectionObserver((ents) => { naTela = ents[0].isIntersecting; if (introOk) ajustaLive(); else mapaEl.classList.toggle("is-live", naTela); }, { rootMargin: "60px 0px" });
+  ioVivo.observe(canvas);
+  document.addEventListener("visibilitychange", ajustaLive);
+  reduz.addEventListener?.("change", ajustaLive);
+  // começa depois da intro (marcadores caindo + radar)
+  const esperaIntro = () => { if (!mapaEl.classList.contains("is-in")) return setTimeout(esperaIntro, 250);
+    setTimeout(() => { introOk = true; mapaEl.classList.add("is-vivo"); ajustaLive(); rota(fixado); atualizaLinha(); }, 2300); };
+  esperaIntro();
 })();

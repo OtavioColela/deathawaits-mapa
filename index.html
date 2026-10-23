@@ -144,10 +144,11 @@
       <!-- 4. Mapa + dossiê -->
       <div class="mp-grid" data-reveal>
         <div class="mp-mapa">
-          <div class="mp-mapa-h"><span class="mp-flicker">Carta tática · DA-164</span><span>7 locais</span></div>
+          <div class="mp-mapa-h"><span class="mp-flicker">Carta tática · DA-164</span><span class="mp-coord" aria-hidden="true">Grade — · 7 locais</span><button type="button" class="mp-nv-btn" aria-pressed="false"><i aria-hidden="true"></i>Visão noturna</button></div>
           <div class="mp-canvas">
             <div class="mp-scan" aria-hidden="true"><i class="mp-radar"></i><i class="mp-band"></i></div>
-<svg viewBox="0 0 1000 620" role="img" aria-labelledby="mp-svg-t" preserveAspectRatio="xMidYMid slice">
+<div class="mp-stage">
+<svg class="mp-base" viewBox="0 0 1000 620" role="img" aria-labelledby="mp-svg-t" preserveAspectRatio="xMidYMid slice">
 <title id="mp-svg-t">Mapa ilustrativo do DeathAwaits com rio, floresta, cidade e os 7 locais marcados</title>
 <defs>
   <pattern id="mp-gridp" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M50 0H0V50" class="mp-svg-grid"/></pattern>
@@ -170,8 +171,6 @@
 <path class="mp-svg-water mp-draw" pathLength="1" style="--dd:.1s" stroke-width="22" d="M340 -20C320 60 170 70 175 160C180 240 300 260 275 350"/>
 <ellipse class="mp-svg-lake mp-pop" cx="250" cy="402" rx="80" ry="56"/>
 <path class="mp-svg-water mp-draw" pathLength="1" style="--dd:.9s" stroke-width="22" d="M240 455C220 530 300 570 262 640"/>
-<path class="mp-svg-flow" d="M340 -20C320 60 170 70 175 160C180 240 300 260 275 350"/>
-<path class="mp-svg-flow" d="M240 455C220 530 300 570 262 640"/>
 <ellipse cx="250" cy="402" rx="42" ry="28" fill="var(--mp-land)" stroke="var(--mp-rock)" stroke-width="1.5"/>
 <g class="mp-svg-ink" opacity=".75"><rect x="236" y="390" width="28" height="18"/><rect x="232" y="384" width="9" height="9"/><rect x="259" y="384" width="9" height="9"/><rect x="232" y="404" width="9" height="9"/><rect x="259" y="404" width="9" height="9"/></g>
 <!-- estradas -->
@@ -291,9 +290,73 @@
 <!-- rosa dos ventos + escala -->
 <g transform="translate(950 565)"><circle r="24" class="mp-svg-paper"/><path d="M0 -18L6 4H-6Z" fill="var(--blood)"/><path d="M0 18L6 -4H-6Z" fill="var(--fg)" opacity=".4"/><text y="-28" text-anchor="middle" class="mp-svg-label" style="fill:var(--fg);font-size:12px">N</text></g>
 </svg>
+<div class="mp-zonas" aria-hidden="true">
+<i class="mp-perigo" style="left:73.20%;top:-1.613%;width:23.60%;height:38.065%" data-id="base" data-risco="extremo"></i>
+<i class="mp-perigo" style="left:38.60%;top:72.742%;width:16.80%;height:27.097%" data-id="posto" data-risco="alto"></i>
+<i class="mp-perigo" style="left:59.80%;top:25.484%;width:18.40%;height:29.677%" data-id="centro" data-risco="alto"></i>
+<i class="mp-escudo" style="left:43.60%;top:41.129%;width:12.80%;height:20.645%" data-id="safezone"></i>
+<i class="mp-escudo mp-escudo2" style="left:43.60%;top:41.129%;width:12.80%;height:20.645%" data-id="safezone"></i>
+<span class="mp-arv" style="left:5.40%;top:13.548%;--sd:3.2s;--sdl:-0.00s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:2.40%;top:29.677%;--sd:3.9s;--sdl:-0.53s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:10.90%;top:34.516%;--sd:4.6s;--sdl:-1.06s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:4.40%;top:49.032%;--sd:5.3s;--sdl:-1.59s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:13.40%;top:44.194%;--sd:3.2s;--sdl:-2.12s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:9.40%;top:61.935%;--sd:3.9s;--sdl:-2.65s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:1.40%;top:86.129%;--sd:4.6s;--sdl:-0.18s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:7.40%;top:79.677%;--sd:5.3s;--sdl:-0.71s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:18.40%;top:88.548%;--sd:3.2s;--sdl:-1.24s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:31.40%;top:88.548%;--sd:3.9s;--sdl:-1.77s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:37.40%;top:4.677%;--sd:4.6s;--sdl:-2.30s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:93.40%;top:91.290%;--sd:5.3s;--sdl:-2.83s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+<span class="mp-arv" style="left:96.20%;top:34.516%;--sd:3.2s;--sdl:-0.36s"><svg viewBox="0 0 32 26"><path d="M9 2l7 12H2z M22 6l7 13H15z M14 12l6 11H8z"/></svg></span>
+</div>
+<div class="mp-fx mp-fx-under" aria-hidden="true">
+<i class="mp-onda" style="left:20.80%;top:60.323%;width:8.40%;height:9.032%;--od:-0.0s"></i>
+<i class="mp-onda" style="left:20.80%;top:60.323%;width:8.40%;height:9.032%;--od:-1.6s"></i>
+<i class="mp-onda" style="left:20.80%;top:60.323%;width:8.40%;height:9.032%;--od:-3.2s"></i>
+<i class="mp-brilho" style="left:20.50%;top:60.000%;width:1.80%;--bd:-0.0s"></i>
+<i class="mp-brilho" style="left:29.00%;top:62.097%;width:1.40%;--bd:-0.9s"></i>
+<i class="mp-brilho" style="left:21.50%;top:70.968%;width:1.60%;--bd:-1.8s"></i>
+<i class="mp-brilho" style="left:30.00%;top:68.548%;width:1.20%;--bd:-2.7s"></i>
+<i class="mp-brilho" style="left:26.20%;top:72.903%;width:1.00%;--bd:-3.6s"></i>
+</div>
+<svg class="mp-fxsvg" viewBox="0 0 1000 620" aria-hidden="true" focusable="false">
+<defs><mask id="mp-route-m" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="620"><path class="mp-route-mask" pathLength="1" d="M0 0"/></mask></defs>
+<path class="mp-svg-flow" d="M340 -20C320 60 170 70 175 160C180 240 300 260 275 350"/>
+<path class="mp-svg-flow" d="M240 455C220 530 300 570 262 640"/>
+<path class="mp-svg-flow mp-flow2" d="M340 -20C320 60 170 70 175 160C180 240 300 260 275 350"/>
+<path class="mp-svg-flow mp-flow2" d="M240 455C220 530 300 570 262 640"/>
+<g class="mp-alcance"><circle cx="500" cy="319" r="120"/><circle cx="500" cy="319" r="240"/><circle cx="500" cy="319" r="360"/></g>
+<g class="mp-vias">
+<path id="mp-v1" d="M500 320C580 300 620 262 690 250C750 200 800 150 838 118"/>
+<path id="mp-v2" d="M500 320C600 360 650 450 725 476C820 500 900 470 1010 470"/>
+<path id="mp-v3" d="M600 -10C560 80 500 200 500 320C520 400 450 460 470 535"/>
+<path id="mp-v4" d="M690 250C800 260 900 300 1010 300"/>
+</g>
+<g class="mp-route"><path class="mp-route-glow" mask="url(#mp-route-m)" d="M0 0"/><path class="mp-route-line" mask="url(#mp-route-m)" d="M0 0"/><circle class="mp-route-end" r="9" cx="-50" cy="-50"/></g>
+</svg>
+<div class="mp-fx mp-fx-over" aria-hidden="true">
+<i class="mp-sweep"></i>
+<div class="mp-carros"></div>
+<div class="mp-blips"></div>
+<div class="mp-drops"></div>
+<span class="mp-ent mp-heli-sh"><svg viewBox="-26 -18 52 36"><path d="M-24 -1h14v2h-14z"/><ellipse cx="0" cy="0" rx="11" ry="6"/><circle cx="0" cy="0" r="15" opacity=".35"/></svg></span><span class="mp-ent mp-heli"><svg viewBox="-26 -18 52 36"><path class="b" d="M-24 -1h14v2h-14z M-25 -5v10h2v-10z"/><ellipse class="b" cx="0" cy="0" rx="11" ry="6"/><ellipse class="v" cx="6" cy="0" rx="4" ry="3.4"/><g class="mp-rotor"><path d="M-17 -1.2h34v2.4h-34z M-1.2 -17h2.4v34h-2.4z"/></g></svg></span>
+<span class="mp-ent mp-aviao-sh"><svg viewBox="-30 -26 60 52"><path d="M26 0c0-2-3-3-6-3H6L-8-22h-5l7 19H-18l-5-7h-4l3 10-3 10h4l5-7H-6l-7 19h5L6 3h14c3 0 6-1 6-3z"/></svg></span><span class="mp-ent mp-aviao"><svg viewBox="-30 -26 60 52"><path d="M26 0c0-2-3-3-6-3H6L-8-22h-5l7 19H-18l-5-7h-4l3 10-3 10h4l5-7H-6l-7 19h5L6 3h14c3 0 6-1 6-3z"/></svg></span>
+<i class="mp-nuvem n1"></i><i class="mp-nuvem n2"></i><i class="mp-nuvem n3"></i>
+</div>
+<span class="mp-route-lbl" aria-hidden="true"></span>
+</div><!-- /mp-stage -->
+<div class="mp-nv" aria-hidden="true"><i class="mp-nv-noise"></i><b>Visão noturna</b></div>
+<div class="mp-ctrl" role="group" aria-label="Controles do mapa">
+  <button type="button" class="mp-zin" aria-label="Aproximar">+</button>
+  <button type="button" class="mp-zout" aria-label="Afastar" disabled>−</button>
+  <button type="button" class="mp-zreset" aria-label="Ver o mapa inteiro" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button type="button" class="mp-mover" aria-pressed="false">Mover</button>
+</div>
+<div class="mp-hint" aria-hidden="true"></div>
             <!-- os marcadores (botões) são criados pelo mapa.js a partir de MAPA_CONFIG.locais -->
           </div>
-          <div class="mp-mapa-f"><span>Mapa ilustrativo · fora de escala</span><span>Setas do teclado: trocar de local</span></div>
+          <div class="mp-mapa-f"><span>Mapa ilustrativo · fora de escala · eventos simulados</span><span class="mp-f-desk">Arraste: mover · Ctrl + rolagem: zoom · 2 cliques: ver tudo · Setas: trocar de local</span><span class="mp-f-mob">Dois dedos: mover e zoom · ou toque em Mover</span></div>
         </div>
 
         <aside class="mp-dossie" id="mp-dossie" aria-label="Dossiê do local selecionado" aria-live="polite">
@@ -316,6 +379,7 @@
             </div>
           </div>
         </aside>
+        <svg class="mp-link" aria-hidden="true" focusable="false"><path d="M0 0"/><circle class="a" r="4"/><circle class="b" r="4"/></svg>
       </div>
       <div class="mp-backdrop" aria-hidden="true"></div>
 
