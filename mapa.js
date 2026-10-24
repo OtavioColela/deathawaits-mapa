@@ -16,6 +16,8 @@ const MAPA_CONFIG = {
      ------------------------------------------------------------------ */
   status: {
     servidorIP: "node.skycenterhosting.com.br:25567",
+    // Status enviado pelo proprio servidor (plugin VipLoja -> Cloudflare). Nao depende do query/porta UDP.
+    statusApi: "https://deathawaits-loja.deathawaitscda.workers.dev/status",
     discordConvite: "gc73gQfb5F", // codigo de https://discord.gg/gc73gQfb5F
     atualizarACadaSeg: 60
   },
@@ -340,6 +342,13 @@ const MAPA_CONFIG = {
   }
   // tenta mcsrvstat.us; se falhar, api.mcstatus.io. Retorna { online, players, max } ou lança erro.
   async function pingServidor(ip) {
+    if (S.statusApi) {
+      try {
+        const s = await getJSON(S.statusApi);
+        if (s.online) return { online: true, players: s.jogadores ?? 0, max: s.max ?? null };
+      } catch (e) { /* cai para o ping abaixo */ }
+    }
+    if (!ip) return { online: false, players: 0, max: null };
     try {
       const j = await getJSON(`https://api.mcsrvstat.us/3/${encodeURIComponent(ip)}`);
       return { online: !!j.online, players: j.players?.online ?? 0, max: j.players?.max ?? null };
@@ -351,7 +360,7 @@ const MAPA_CONFIG = {
   async function atualizaStatus() {
     const d = { estado: "erro", online: null, max: null, discord: null };
     const tarefas = [];
-    if (S.servidorIP) tarefas.push(pingServidor(S.servidorIP).then((r) => {
+    if (S.servidorIP || S.statusApi) tarefas.push(pingServidor(S.servidorIP).then((r) => {
       d.estado = r.online ? "online" : "offline";
       d.online = r.online ? r.players : 0;
       d.max = r.online ? r.max : null;
