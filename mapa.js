@@ -98,7 +98,7 @@ const MAPA_CONFIG = {
   ],
 
   links: {
-    launcher: "https://www.dropbox.com/scl/fi/nmkjsgwz30eq004yfdkuc/DeathAwaits-Launcher-Setup-1.0.0.exe?rlkey=nyyislrsiw7ogw8956etbm78i&st=9kq0o0xe&dl=1",
+    launcher: "https://www.dropbox.com/scl/fi/rq31xzb4dp51te05v7322/DeathAwaits-Launcher-Setup-1.1.2.exe?rlkey=wrdtlf2qej30c48bs4k6huib0&dl=1",
     discord: "https://discord.gg/gc73gQfb5F"
   }
 };
