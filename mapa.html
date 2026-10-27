@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark" class="da-embed">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mapa · DeathAwaits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="mapa.css?v=6">
+<style>
+/* Versao so do mapa, usada dentro do launcher (sem cabecalho, sem video e sem chamada para baixar o launcher) */
+.da-embed body { background: var(--bg); }
+.da-embed .mp-video, .da-embed .mp-video + .hazard, .da-embed .mp-cta { display: none !important; }
+.da-embed #mapa { padding-top: 18px; }
+.da-embed ::-webkit-scrollbar { width: 10px; }
+.da-embed ::-webkit-scrollbar-thumb { background: #3a3e2e; }
+.da-embed ::-webkit-scrollbar-track { background: #181a13; }
+</style>
+</head>
+<body>
+<main>
+<!-- ================= INÍCIO DA SEÇÃO DO MAPA (copie daqui) ================= -->
+  <section id="mapa" aria-labelledby="mp-titulo">
+
+    <!-- 1. Vídeo de fundo em loop (sem som).
+         Para ativar: grave 10–15 s de voo de câmera/tiroteio/airdrop, exporte
+         em MP4 (H.264, 1280x720, ~2–4 MB) e descomente a linha <source>.
+         Sem vídeo, aparece o print da safezone (poster). -->
+    <div class="mp-video">
+      <video autoplay muted loop playsinline preload="metadata" poster="safezone.jpg" aria-hidden="true">
+        <!-- <source src="video/mapa-loop.mp4" type="video/mp4"> -->
+      </video>
+      <span class="mp-stamp">Zona de quarentena</span>
+      <div class="wrap mp-video-inner" data-reveal="stagger">
+        <div class="mp-rec mp-mono"><i aria-hidden="true"></i> Registro de reconhecimento · Setor DA-164</div>
+        <h2 id="mp-titulo">O <span>mapa</span></h2>
+        <p class="mp-lead">Cidades construídas bloco a bloco para o DeathAwaits. Escolha um ponto e leia o dossiê antes de sair da safezone.</p>
+      </div>
+    </div>
+    <div class="hazard" aria-hidden="true"></div>
+
+    <div class="wrap">
+
+      <!-- 2. Status do servidor (configurado em mapa.js > MAPA_CONFIG.status) -->
+      <div class="mp-status is-verificando" aria-live="polite" data-reveal>
+        <div class="mp-status-h">
+          <span class="mp-live mp-mono"><i aria-hidden="true"></i><span class="mp-live-txt">Verificando...</span></span>
+          
+        </div>
+        <div class="mp-stat"><span>Jogadores online</span><b data-s="online">—</b></div>
+        <div class="mp-stat"><span>Membros no Discord</span><b data-s="discord">—</b></div>
+        <p class="mp-status-note"></p>
+      </div>
+
+      <!-- 3. Título + filtro/legenda de risco -->
+      <div class="mp-toolbar" data-reveal="stagger">
+        <div>
+          <h3>Mapa tático</h3>
+          <p>Clique ou toque num ponto para abrir o dossiê. Quanto maior o risco, melhor o loot.</p>
+        </div>
+        <fieldset class="mp-filtro">
+          <legend>Legenda · filtrar por risco</legend>
+          <button type="button" class="mp-chip" data-filtro="todos" aria-pressed="true">Todos <em></em></button>
+          <button type="button" class="mp-chip" data-filtro="baixo" aria-pressed="false" style="--r: var(--mp-baixo)"><span class="mp-dot" aria-hidden="true"></span>Baixo <em></em></button>
+          <button type="button" class="mp-chip" data-filtro="medio" aria-pressed="false" style="--r: var(--mp-medio)"><span class="mp-dot" aria-hidden="true"></span>Médio <em></em></button>
+          <button type="button" class="mp-chip" data-filtro="alto" aria-pressed="false" style="--r: var(--mp-alto)"><span class="mp-dot" aria-hidden="true"></span>Alto <em></em></button>
+          <button type="button" class="mp-chip" data-filtro="extremo" aria-pressed="false" style="--r: var(--mp-extremo)"><span class="mp-dot" aria-hidden="true"></span>Extremo <em></em></button>
+        </fieldset>
+      </div>
+      <p class="mp-filtro-msg" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Mostrando todos os locais.</p>
+
+      <!-- 4. Mapa + dossiê -->
+      <div class="mp-grid" data-reveal>
+        <div class="mp-mapa">
+          <div class="mp-mapa-h"><span class="mp-flicker">Carta tática · DA-164</span><span class="mp-coord" aria-hidden="true">Grade — · 10 locais</span><button type="button" class="mp-nv-btn" aria-pressed="false"><i aria-hidden="true"></i>Visão noturna</button></div>
+          <div class="mp-canvas">
+            <div class="mp-scan" aria-hidden="true"><i class="mp-radar"></i><i class="mp-band"></i></div>
+<div class="mp-stage">
+<picture class="mp-img">
+<source type="image/webp" srcset="mapa-real-900.webp 900w, mapa-real.webp 1800w" sizes="(max-width: 820px) calc(100vw - 36px), 1200px">
+<img src="mapa-real.jpg" width="1833" height="2040" alt="Mapa real do servidor DeathAwaits visto de cima: rio grande cortando o mapa de norte a sul, mar a oeste e ao sul, cidades, bases e uma ilha" decoding="async" draggable="false">
+</picture>
+<svg class="mp-base" viewBox="0 0 1000 1112.9" aria-hidden="true" focusable="false">
+<g class="mp-g-lines"><path d="M100 0V1112.9"/><path d="M200 0V1112.9"/><path d="M300 0V1112.9"/><path d="M400 0V1112.9"/><path d="M500 0V1112.9"/><path d="M600 0V1112.9"/><path d="M700 0V1112.9"/><path d="M800 0V1112.9"/><path d="M900 0V1112.9"/><path d="M0 101.2H1000"/><path d="M0 202.3H1000"/><path d="M0 303.5H1000"/><path d="M0 404.7H1000"/><path d="M0 505.9H1000"/><path d="M0 607.0H1000"/><path d="M0 708.2H1000"/><path d="M0 809.4H1000"/><path d="M0 910.6H1000"/><path d="M0 1011.7H1000"/></g>
+<g class="mp-g-lbl"><text x="50" y="20">A</text><text x="150" y="20">B</text><text x="250" y="20">C</text><text x="350" y="20">D</text><text x="450" y="20">E</text><text x="550" y="20">F</text><text x="650" y="20">G</text><text x="750" y="20">H</text><text x="850" y="20">I</text><text x="950" y="20">J</text><text x="13" y="55.6">1</text><text x="13" y="156.8">2</text><text x="13" y="257.9">3</text><text x="13" y="359.1">4</text><text x="13" y="460.3">5</text><text x="13" y="561.5">6</text><text x="13" y="662.6">7</text><text x="13" y="763.8">8</text><text x="13" y="865.0">9</text><text x="13" y="966.1">10</text><text x="13" y="1067.3">11</text></g>
+<g class="mp-rosa" transform="translate(955 1062.9)"><circle r="24"/><path d="M0 -18L6 4H-6Z" class="n"/><path d="M0 18L6 -4H-6Z" class="s"/><text y="-29">N</text></g>
+</svg>
+<div class="mp-zonas" aria-hidden="true"><!-- zonas de perigo e escudo: criados pelo mapa.js a partir das posições --></div>
+<svg class="mp-fxsvg" viewBox="0 0 1000 1112.9" aria-hidden="true" focusable="false">
+<defs><mask id="mp-route-m" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1112.9"><path class="mp-route-mask" pathLength="1" d="M0 0"/></mask></defs>
+<g class="mp-alcance"><circle r="120"/><circle r="240"/><circle r="360"/></g>
+<!-- estradas (invisíveis) por onde os veículos andam: traçadas à mão sobre estradas reais do mapa -->
+<g class="mp-vias">
+<path id="mp-v1" d="M714.0 180.3Q763.0 191.4 785.0 199.2Q807.0 207.0 829.0 220.9Q851.0 234.8 870.0 245.4Q889.0 256.0 905.5 267.1Q922.0 278.2 935.5 294.4Q949.0 310.5 950.0 330.0Q951.0 349.5 941.5 365.6Q932.0 381.7 916.0 392.9Q900 404.0 889.0 417.4Q878.0 430.7 869.5 444.6Q861.0 458.5 852.0 466.3Q843.0 474.1 849.5 490.8Q856.0 507.5 850.5 523.6Q845.0 539.8 842.5 556.5Q840 573.1 836.5 592.6Q833.0 612.1 831.5 625.5L830 638.8"/>
+<path id="mp-v2" d="M184.0 931.5Q262.0 932.6 294.5 932.6Q327.0 932.6 365.0 929.8Q403.0 927.0 430.5 922.0Q458.0 917.0 485.5 906.5Q513.0 895.9 540.0 898.1Q567.0 900.3 589.0 897.5Q611.0 894.8 632.5 889.2Q654.0 883.6 681.5 883.6Q709.0 883.6 736.0 883.6Q763.0 883.6 806.5 886.4Q850 889.2 872.0 889.2Q894.0 889.2 910.5 883.7Q927.0 878.1 943.5 873.1L960 868.1"/>
+<path id="mp-v3" d="M85.0 153.6Q85.0 217.0 95.5 234.2Q106.0 251.5 134.0 266.6Q162.0 281.6 166.0 302.8Q170 323.9 166.0 345.0Q162.0 366.1 159.0 383.4Q156.0 400.6 159.0 430.1Q162.0 459.6 155.5 481.3Q149.0 503.0 142.5 524.1Q136.0 545.3 138.0 550.9Q140 556.5 143.5 587.1Q147.0 617.7 145.0 646.6Q143.0 675.5 145.0 704.5L147.0 733.4"/>
+<path id="mp-v4" d="M265.0 300.5Q245.0 267.1 245.0 200.3Q245.0 133.5 297.5 132.4Q350 131.3 404.0 131.3Q458.0 131.3 489.0 134.1Q520 136.9 560.0 138.0Q600 139.1 625.0 139.1L650 139.1"/>
+<path id="mp-v5" d="M505.0 702.2Q548.0 701.1 568.5 700.5Q589.0 700.0 597.5 705.0Q606.0 710.0 614.5 725.0Q623.0 740.1 624.5 760.7Q626.0 781.3 624.5 805.2Q623.0 829.1 624.5 853.0L626.0 877.0"/>
+</g>
+<g class="mp-route"><path class="mp-route-glow" mask="url(#mp-route-m)" d="M0 0"/><path class="mp-route-line" mask="url(#mp-route-m)" d="M0 0"/><circle class="mp-route-end" r="9" cx="-50" cy="-50"/></g>
+</svg>
+<div class="mp-fx mp-fx-over" aria-hidden="true">
+<i class="mp-sweep"></i>
+<div class="mp-carros"></div>
+<div class="mp-blips"></div>
+<div class="mp-drops"></div>
+<span class="mp-ent mp-heli-sh"><svg viewBox="-26 -18 52 36"><path d="M-24 -1h14v2h-14z"/><ellipse cx="0" cy="0" rx="11" ry="6"/><circle cx="0" cy="0" r="15" opacity=".35"/></svg></span><span class="mp-ent mp-heli"><svg viewBox="-26 -18 52 36"><path class="b" d="M-24 -1h14v2h-14z M-25 -5v10h2v-10z"/><ellipse class="b" cx="0" cy="0" rx="11" ry="6"/><ellipse class="v" cx="6" cy="0" rx="4" ry="3.4"/><g class="mp-rotor"><path d="M-17 -1.2h34v2.4h-34z M-1.2 -17h2.4v34h-2.4z"/></g></svg></span>
+<span class="mp-ent mp-aviao-sh"><svg viewBox="-30 -26 60 52"><path d="M26 0c0-2-3-3-6-3H6L-8-22h-5l7 19H-18l-5-7h-4l3 10-3 10h4l5-7H-6l-7 19h5L6 3h14c3 0 6-1 6-3z"/></svg></span><span class="mp-ent mp-aviao"><svg viewBox="-30 -26 60 52"><path d="M26 0c0-2-3-3-6-3H6L-8-22h-5l7 19H-18l-5-7h-4l3 10-3 10h4l5-7H-6l-7 19h5L6 3h14c3 0 6-1 6-3z"/></svg></span>
+<i class="mp-nuvem n1"></i><i class="mp-nuvem n2"></i><i class="mp-nuvem n3"></i>
+</div>
+<span class="mp-route-lbl" aria-hidden="true"></span>
+</div><!-- /mp-stage -->
+<div class="mp-nv" aria-hidden="true"><i class="mp-nv-noise"></i><b>Visão noturna</b></div>
+<div class="mp-ctrl" role="group" aria-label="Controles do mapa">
+  <button type="button" class="mp-zin" aria-label="Aproximar">+</button>
+  <button type="button" class="mp-zout" aria-label="Afastar" disabled>−</button>
+  <button type="button" class="mp-zreset" aria-label="Ver o mapa inteiro" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button type="button" class="mp-full" aria-label="Abrir o mapa em tela cheia, na resolução original" title="Tela cheia"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>
+  <button type="button" class="mp-mover" aria-pressed="false">Mover</button>
+</div>
+<div class="mp-hint" aria-hidden="true"></div>
+            <!-- os marcadores (botões) são criados pelo mapa.js a partir de MAPA_CONFIG.locais -->
+          </div>
+          <div class="mp-mapa-f"><span>Mapa real do servidor · posições marcadas pela equipe · eventos simulados</span><span class="mp-f-desk">Arraste: mover · Ctrl + rolagem: zoom · 2 cliques: ver tudo · Setas: trocar de local</span><span class="mp-f-mob">Dois dedos: mover e zoom · ou toque em Mover</span></div>
+        </div>
+
+        <aside class="mp-dossie" id="mp-dossie" aria-label="Dossiê do local selecionado" aria-live="polite">
+          <div class="mp-dossie-h"><span class="mp-titulo">Dossiê</span><span class="mp-confid">Confidencial</span><button type="button" class="mp-close">Fechar ✕</button></div>
+          <div class="mp-dossie-in">
+            <figure class="mp-foto"><img src="safezone.jpg" alt="" width="1280" height="661"><span class="mp-carimbo" aria-hidden="true">Risco</span><span class="mp-ampliar" aria-hidden="true">Ampliar</span></figure>
+            <div class="mp-dossie-body">
+              <span class="mp-ref mp-mono"></span>
+              <h3>Safezone</h3>
+              <dl class="mp-ficha">
+                <dt>Risco</dt><dd data-f="risco"></dd>
+                <dt>Loot</dt><dd data-f="loot"></dd>
+              </dl>
+              <p class="mp-lore" title="Clique para mostrar o texto todo"><span class="mp-sr"></span><span class="mp-type" aria-hidden="true"></span></p>
+              <div class="mp-nav">
+                <button type="button" class="mp-prev">← Anterior</button>
+                <button type="button" class="mp-next">Próximo →</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+        <svg class="mp-link" aria-hidden="true" focusable="false"><path d="M0 0"/><circle class="a" r="4"/><circle class="b" r="4"/></svg>
+      </div>
+      <div class="mp-backdrop" aria-hidden="true"></div>
+
+      <!-- 5. Registros (miniaturas; também servem de lista acessível) -->
+      <ul class="mp-cards" aria-label="Registros dos locais"></ul>
+
+      <!-- 6. CTA -->
+      <div class="mp-cta" data-reveal>
+        <div class="hazard" aria-hidden="true"></div>
+        <span class="mp-stamp2" aria-hidden="true">Liberado</span>
+        <div class="mp-cta-in">
+          <div>
+            <h3>Pronto pra sair da <span>safezone?</span></h3>
+            <p>Baixe o launcher, entre no servidor e escolha seu primeiro destino. No Discord você encontra avisos de eventos e suporte.</p>
+          </div>
+          <div>
+            <div class="cta">
+              <a class="btn btn-primary" data-link="launcher" href="https://www.dropbox.com/scl/fi/nmkjsgwz30eq004yfdkuc/DeathAwaits-Launcher-Setup-1.0.0.exe?rlkey=nyyislrsiw7ogw8956etbm78i&amp;st=9kq0o0xe&amp;dl=1" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
+                Baixar o launcher
+              </a>
+              <a class="btn btn-ghost" data-link="discord" href="https://discord.gg/gc73gQfb5F" target="_blank" rel="noopener">Entrar no Discord</a>
+            </div>
+            <p class="cta-note">Para Windows. Funciona com conta original ou pirata.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+  <script src="mapa.js?v=7" defer></script>
+<!-- ================= FIM DA SEÇÃO DO MAPA (copie até aqui) ================= -->
+</main>
+</body>
+</html>
