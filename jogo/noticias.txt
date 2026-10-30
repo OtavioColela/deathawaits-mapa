@@ -1,0 +1,6 @@
+# Noticias que aparecem na tela inicial do jogo (no maximo 3 aparecem).
+# Uma por linha, no formato:  TAG|texto
+# Linhas que comecam com # sao ignoradas. Edite e salve: o jogo pega sozinho.
+LAUNCHER|Launcher novo com mapa do servidor e status no Discord.
+MAPA|Confira os pontos e o loot de cada cidade no mapa do site.
+DISCORD|Entre no Discord para eventos, suporte e novidades.

@@ -1,0 +1,27 @@
+name: Menu do jogo
+# Quando o mapa (mapa.js / mapa-real.jpg) ou as noticias mudam, regenera jogo/menu.txt e jogo/mapa.jpg,
+# que a tela inicial do mod baixa sozinha.
+on:
+  push:
+    branches: [main]
+    paths: ["mapa.js", "mapa-real.jpg", "jogo/noticias.txt", "jogo/gerar.js"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reduz a imagem do mapa
+        run: |
+          sudo apt-get install -y -qq imagemagick >/dev/null || true
+          convert mapa-real.jpg -resize 1024x -strip -quality 85 jogo/mapa.jpg
+      - name: Gera menu.txt
+        run: node jogo/gerar.js
+      - name: Salva
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jogo/menu.txt jogo/mapa.jpg
+          git diff --cached --quiet || (git commit -m "Menu do jogo: atualiza mapa e noticias" && git push)

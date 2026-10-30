@@ -1,0 +1,15 @@
+# gerado por jogo/gerar.js - nao edite (edite mapa.js e jogo/noticias.txt)
+imagem|https://deathawaits.com.br/jogo/mapa.jpg|84a306ba4bcb
+ponto|01|Safezone|62.71|27.01|baixo|comum|Bandeiras do Brasil ainda tremulam sobre a praça. Os caminhões do exército e o hospital são a última coisa organizada que sobrou. Aqui ninguém atira. Lá fora, ninguém te espera.
+ponto|02|Capital|69.72|16.64|alto|raro|Do estádio dá pra ver o capitólio e a ponte vermelha. Cada arranha-céu tem andares que ninguém saqueou, porque quem sobe nem sempre desce.
+ponto|03|Castelo|61.05|6.76|medio|raro|Uma ponte, um fosso e muralhas de pedra. O melhor esconderijo do mapa, se você conseguir tirar quem já está lá dentro.
+ponto|04|Base radioativa|31.23|18.06|extremo|militar|Tonéis laranja empilhados até onde a vista alcança. O contador Geiger não para de estalar, e os mortos daqui andam de roupa hazmat. O melhor loot do mapa cobra caro.
+ponto|05|Springfield|11.40|14.88|medio|comum|O posto de controle no cruzamento ainda tem a cancela abaixada. Os soldados foram embora; o que eles deixaram nas caixas, não.
+ponto|06|Prisão|51.36|42.35|alto|raro|As celas se abriram quando a energia caiu. Os presos não foram longe: ainda rondam o pátio, esperando a próxima visita.
+ponto|07|Base aérea|91.35|49.09|alto|militar|Hangares verdes, um helicóptero no chão e a pista vazia. A evacuação saiu daqui, e quem ficou para trás ainda guarda as armas.
+ponto|08|Tacoma|59.87|60.56|medio|comum|Um tanque parado no cruzamento, sem combustível e sem tripulação. As ruas em grade parecem calmas. É exatamente isso que preocupa.
+ponto|09|Aeroporto|11.62|68.21|medio|raro|O último voo nunca saiu. As malas continuam na esteira, os aviões no pátio, e a torre de controle ainda enxerga tudo até o mar.
+ponto|10|Residencial|16.67|77.97|baixo|comum|Casas grandes, garagens fechadas e despensas cheias. Bom lugar pra começar, desde que você feche a porta ao entrar.
+noticia|LAUNCHER|Launcher novo com mapa do servidor e status no Discord.
+noticia|MAPA|Confira os pontos e o loot de cada cidade no mapa do site.
+noticia|DISCORD|Entre no Discord para eventos, suporte e novidades.
