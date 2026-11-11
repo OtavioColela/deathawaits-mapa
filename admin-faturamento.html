@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Faturamento · Painel</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="site.css?v=6">
+<style>
+  main { max-width: 760px; margin: 0 auto; padding: 28px 16px 60px; }
+  h1 { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 40px; margin: 0 0 4px; }
+  h2 { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 22px; margin: 28px 0 10px; }
+  .box { border: 1px solid var(--line); background: var(--surface); padding: 16px; }
+  label { display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 10px 0 4px; }
+  input { width: 100%; padding: 9px 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); font: inherit; }
+  .lin { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+  .lin > div { flex: 1 1 160px; }
+  button { font: inherit; font-weight: 600; padding: 9px 16px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+  button.pri { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  button.perigo { border-color: var(--blood); color: var(--blood); }
+  .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .nums div { border: 1px solid var(--line); padding: 10px; background: var(--bg); }
+  .nums small { display: block; font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--muted); }
+  .nums b { font-family: var(--font-mono); font-size: 18px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td { border-bottom: 1px solid var(--line); padding: 7px 4px; }
+  td:last-child { text-align: right; }
+  #msg { min-height: 1.6em; font-family: var(--font-mono); font-size: 13px; margin-top: 10px; }
+  #msg.erro { color: var(--blood); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Faturamento</h1>
+  <p style="color:var(--muted);margin:0 0 18px">Painel do dono: custos do servidor e temporadas. Tudo que você muda aqui aparece no canal #faturamento.</p>
+
+  <div class="box" id="login">
+    <label for="chave">Senha do painel</label>
+    <div class="lin"><div><input id="chave" type="password" autocomplete="current-password"></div><button class="pri" id="entrar">Entrar</button></div>
+  </div>
+
+  <div id="painel" hidden>
+    <h2 id="tnome">Temporada</h2>
+    <div class="nums" id="nums"></div>
+
+    <h2>Adicionar custo</h2>
+    <div class="box">
+      <div class="lin">
+        <div><label for="cdesc">Descrição</label><input id="cdesc" placeholder="Host SkyCenter - novembro" maxlength="80"></div>
+        <div style="flex:0 1 140px"><label for="cval">Valor (R$)</label><input id="cval" inputmode="decimal" placeholder="49,90"></div>
+        <button class="pri" id="addc">Adicionar</button>
+      </div>
+    </div>
+
+    <h2>Custos da temporada</h2>
+    <div class="box"><table id="custos"></table></div>
+
+    <h2>Temporada</h2>
+    <div class="box">
+      <div class="lin">
+        <div><label for="tnovo">Nome</label><input id="tnovo" maxlength="40"></div>
+        <button id="renomear">Renomear</button>
+      </div>
+      <div class="lin" style="margin-top:14px">
+        <button id="postar">Postar resumo no Discord</button>
+        <button id="zerar" title="Use no dia do wipe">Começar a contar a partir de agora</button>
+        <button class="perigo" id="fechar">Encerrar temporada</button>
+      </div>
+    </div>
+    <p id="msg"></p>
+  </div>
+</main>
+<script>
+const API = "https://deathawaits-loja.deathawaitscda.workers.dev/admin";
+const $ = (s) => document.querySelector(s);
+const brl = (v) => "R$ " + Number(v || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+let chave = "";
+try { chave = sessionStorage.getItem("da-admin") || ""; } catch (e) {}
+function msg(t, erro) { $("#msg").textContent = t || ""; $("#msg").className = erro ? "erro" : ""; }
+async function enviar(dados) {
+  const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ chave, ...dados }) });
+  const d = await r.json().catch(() => ({ erro: "Resposta inválida (" + r.status + ")" }));
+  if (!r.ok || d.erro) throw new Error(d.erro || r.status);
+  return d;
+}
+function mostrar(r) {
+  $("#tnome").textContent = r.temporada + " · desde " + r.inicio.slice(0, 16).split(" ").map((x, i) => i ? x : x.split("-").reverse().join("/")).join(" ");
+  $("#tnovo").value = r.temporada;
+  const n = [["Vendas", r.vendas + " · " + brl(r.bruto)], ["Taxas MP", brl(r.taxas)], ["Custos", brl(r.totalCustos)], ["Lucro", brl(r.lucro)],
+    ["🥇 TOP 1", brl(r.premios.top1)], ["🥈 TOP 2", brl(r.premios.top2)], ["🥉 TOP 3", brl(r.premios.top3)]];
+  $("#nums").innerHTML = "";
+  for (const [k, v] of n) { const d = document.createElement("div"); d.innerHTML = "<small></small><b></b>"; d.querySelector("small").textContent = k; d.querySelector("b").textContent = v; $("#nums").append(d); }
+  const t = $("#custos"); t.innerHTML = "";
+  if (!r.custos.length) t.innerHTML = '<tr><td style="color:var(--muted)">Nenhum custo nesta temporada.</td></tr>';
+  for (const c of r.custos) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = "<td></td><td></td><td></td>";
+    tr.children[0].textContent = c.descricao; tr.children[1].textContent = brl(c.valor);
+    const b = document.createElement("button"); b.textContent = "Remover"; b.className = "perigo";
+    b.onclick = () => acao({ acao: "remover-custo", id: c.id }, "Custo removido.", "Remover o custo \"" + c.descricao + "\"?");
+    tr.children[2].append(b); t.append(tr);
+  }
+}
+async function acao(dados, ok, confirmar) {
+  if (confirmar && !confirm(confirmar)) return;
+  msg("Enviando...");
+  try { const d = await enviar(dados); mostrar(d.resumo || (await enviar({ acao: "ver" })).resumo); msg(ok); }
+  catch (e) { msg(e.message, true); }
+}
+async function entrar() {
+  msg("");
+  try {
+    const d = await enviar({ acao: "ver" });
+    try { sessionStorage.setItem("da-admin", chave); } catch (e) {}
+    $("#login").hidden = true; $("#painel").hidden = false; mostrar(d.resumo);
+  } catch (e) { $("#login").hidden = false; $("#painel").hidden = true; if (chave) alert(e.message); }
+}
+$("#entrar").onclick = () => { chave = $("#chave").value; entrar(); };
+$("#chave").onkeydown = (e) => { if (e.key === "Enter") $("#entrar").click(); };
+$("#addc").onclick = () => acao({ acao: "custo", descricao: $("#cdesc").value, valor: (() => { const v = String($("#cval").value).trim(); return v.includes(",") ? v.replace(/\./g, "").replace(",", ".") : v; })() }, "Custo adicionado.");
+$("#renomear").onclick = () => acao({ acao: "renomear", nome: $("#tnovo").value }, "Nome atualizado.");
+$("#postar").onclick = () => acao({ acao: "postar" }, "Resumo postado no Discord.");
+$("#zerar").onclick = () => acao({ acao: "reiniciar-inicio" }, "A temporada agora conta a partir deste momento.", "A temporada vai contar vendas só a partir de agora (vendas anteriores saem da conta). Continuar?");
+$("#fechar").onclick = () => {
+  const nome = prompt("Encerrar a temporada atual? Os valores finais vão para o Discord e uma nova temporada começa.\n\nNome da próxima temporada:", "");
+  if (nome === null) return;
+  acao({ acao: "fechar", nome }, "Temporada encerrada e nova temporada iniciada.");
+};
+if (chave) entrar();
+</script>
+</body>
+</html>

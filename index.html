@@ -22,6 +22,7 @@
   try { if (!sessionStorage.getItem("da-boot")) { d.classList.add("da-booting"); sessionStorage.setItem("da-boot", "1"); } } catch (e) {}
 })();
 </script>
+<link rel="stylesheet" href="premio.css?v=1">
 </head>
 <body>
 <a class="da-skip" href="#conteudo">Pular para o conteúdo</a>
@@ -348,6 +349,28 @@
   </section>
 
   <div class="da-divider" aria-hidden="true"></div>
+  <section id="premio" hidden>
+    <div class="wrap">
+      <div class="sec-h">
+        <div><span class="da-sec-tag">Competição de clãs · <span data-pr="nome">Temporada</span></span><h2>Prêmio da temporada</h2></div>
+        <p>Parte do lucro do servidor vira prêmio em dinheiro para os 3 melhores clãs. O valor sobe a cada venda da loja, em tempo real.</p>
+      </div>
+      <div class="pr-grid">
+        <div class="pr-pos p2"><small>🥈 TOP 2</small><b data-pr="top2">R$ 0,00</b><span data-pr="top2p"></span></div>
+        <div class="pr-pos p1"><small>🥇 TOP 1</small><b data-pr="top1">R$ 0,00</b><span data-pr="top1p"></span></div>
+        <div class="pr-pos p3"><small>🥉 TOP 3</small><b data-pr="top3">R$ 0,00</b><span data-pr="top3p"></span></div>
+      </div>
+      <div class="pr-conta">
+        <span>Vendas: <strong data-pr="vendas">-</strong></span>
+        <span>Taxas: <strong data-pr="taxas">-</strong></span>
+        <span>Custos do servidor: <strong data-pr="custos">-</strong></span>
+        <span>Lucro: <strong data-pr="lucro">-</strong></span>
+      </div>
+      <p class="pr-nota">Tudo é público: cada venda e cada custo também aparecem no canal #faturamento do <a href="https://discord.gg/gc73gQfb5F" target="_blank" rel="noopener">Discord</a>.</p>
+    </div>
+  </section>
+
+  <div class="da-divider" aria-hidden="true"></div>
   <section id="requisitos">
     <div class="wrap">
       <div class="sec-h">
@@ -420,5 +443,6 @@
 </div>
 
 <script src="site.js?v=6" defer></script>
+<script src="premio.js?v=1" defer></script>
 </body>
 </html>

@@ -1,0 +1,16 @@
+/* Bloco "Premio da temporada" (dados do Worker da loja: /temporada) */
+#premio[hidden] { display: none; }
+.pr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: end; }
+.pr-pos { border: 1px solid var(--line); background: var(--surface); padding: 18px 16px 16px; position: relative; }
+.pr-pos.p1 { border-color: var(--accent); box-shadow: 6px 6px 0 color-mix(in srgb, var(--accent) 35%, transparent); padding-top: 28px; }
+.pr-pos small { display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.pr-pos b { display: block; font-family: var(--font-display); font-weight: 900; font-size: clamp(30px, 5vw, 46px); line-height: 1; margin: 6px 0 4px; color: var(--fg); }
+.pr-pos.p1 b { color: var(--accent); font-size: clamp(38px, 7vw, 64px); }
+.pr-pos span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.pr-conta { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: var(--font-mono); font-size: 13px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 12px; }
+.pr-conta strong { color: var(--fg); font-weight: 600; }
+.pr-nota { margin: 10px 0 0; font-size: 14px; color: var(--muted); }
+@media (max-width: 640px) {
+  .pr-grid { grid-template-columns: 1fr; }
+  .pr-pos.p1 { order: -1; }
+}
