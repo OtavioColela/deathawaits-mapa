@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DeathAwaits Mobile: jogue o servidor DeathAwaits (Crafting Dead) no seu Android.">
+<meta name="theme-color" content="#181a13">
+<title>DeathAwaits Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="icon" href="../rpc/icone.png">
+<style>
+  :root { --bg:#181a13; --card:#22251b; --line:#3a3e2e; --txt:#e6e1cf; --mut:#a3a48d; --ocre:#e0b43c; --sangue:#d0634f;
+          --disp:"Big Shoulders Stencil Display", Impact, sans-serif; --mono:"IBM Plex Mono", Consolas, monospace; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--txt); font:16px/1.55 "IBM Plex Sans", system-ui, sans-serif; }
+  a { color:var(--ocre); }
+  .faixa { height:10px; background:repeating-linear-gradient(-45deg, var(--ocre) 0 12px, transparent 12px 24px); opacity:.9; }
+  main { max-width:760px; margin:0 auto; padding:32px 16px 56px; }
+  .volta { font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; color:var(--mut); }
+  .topo { display:flex; gap:20px; align-items:center; margin:22px 0 8px; }
+  .topo img { width:88px; height:88px; border:1px solid var(--line); flex:none; }
+  .tag { font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--sangue); }
+  h1 { font-family:var(--disp); font-weight:900; text-transform:uppercase; font-size:clamp(44px, 11vw, 76px); line-height:.88; margin:4px 0 0; }
+  h1 span { color:var(--ocre); }
+  h2 { font-family:var(--disp); font-weight:900; text-transform:uppercase; letter-spacing:.03em; font-size:28px; margin:36px 0 10px; }
+  .baixar { display:inline-flex; align-items:center; gap:10px; margin:22px 0 6px; padding:16px 26px; background:var(--ocre); color:#1b1a10;
+            font-weight:600; font-size:18px; text-decoration:none; box-shadow:5px 5px 0 #0008; }
+  .baixar:active { transform:translate(2px,2px); box-shadow:2px 2px 0 #0008; }
+  .nota { font-family:var(--mono); font-size:12px; color:var(--mut); letter-spacing:.04em; }
+  .beta { display:inline-block; border:2px solid var(--sangue); color:var(--sangue); font-family:var(--mono); font-weight:600; font-size:12px;
+          letter-spacing:.14em; padding:2px 8px; transform:rotate(-3deg); margin-left:6px; }
+  ol, ul { padding-left:22px; } li { margin:6px 0; }
+  .ficha { border:1px solid var(--line); background:var(--card); padding:14px 18px; margin-top:12px; }
+  .ficha b { color:var(--txt); } .ficha p { margin:6px 0; color:var(--mut); }
+  .aviso { border-left:4px solid var(--sangue); background:#2a1f1b; padding:12px 16px; margin-top:14px; }
+</style>
+</head>
+<body>
+<div class="faixa"></div>
+<main>
+  <a class="volta" href="../">← deathawaits.com.br</a>
+  <div class="topo">
+    <img src="../rpc/icone.png" alt="">
+    <div>
+      <div class="tag">Android · Crafting Dead 1.6.4</div>
+      <h1>DeathAwaits <span>Mobile</span></h1>
+    </div>
+  </div>
+  <p>Jogue o DeathAwaits no celular. Instale o app, toque em <b>JOGAR</b> e pronto: ele baixa o Minecraft, o Forge e o modpack sozinho e já entra no servidor. <span class="beta">BETA</span></p>
+
+  <a class="baixar" href="https://github.com/OtavioColela/deathawaits-mobile/releases/download/apk/DeathAwaits-Mobile.apk">⬇ Baixar o APK</a>
+  <div class="nota">DeathAwaits-Mobile.apk · versão de testes</div>
+
+  <h2>Como instalar</h2>
+  <ol>
+    <li>Toque em <b>Baixar o APK</b> pelo navegador do celular.</li>
+    <li>Abra o arquivo baixado. Se o Android perguntar, permita <b>instalar apps desta fonte</b> (é normal para apps fora da Play Store).</li>
+    <li>Abra o <b>DeathAwaits</b> e entre com a sua conta <b>Microsoft</b> do Minecraft (só na primeira vez).</li>
+    <li>Toque em <b>JOGAR</b>. A primeira vez demora alguns minutos para baixar tudo (uns 150 MB, de preferência no Wi-Fi).</li>
+  </ol>
+
+  <h2>Requisitos</h2>
+  <div class="ficha">
+    <p><b>Android 8 ou mais novo</b> (64 bits)</p>
+    <p><b>4 GB de RAM no mínimo</b> · 6 GB ou mais é o recomendado</p>
+    <p><b>Minecraft original</b> (conta Microsoft que comprou o Minecraft: Java Edition)</p>
+    <p><b>~1 GB livre</b> no armazenamento</p>
+  </div>
+  <div class="aviso">No celular é preciso ter o <b>Minecraft original</b>: o app pede o login da conta Microsoft uma vez. No PC, o <a href="../baixar/">launcher do DeathAwaits</a> continua funcionando normalmente.</div>
+
+  <h2>Deu problema?</h2>
+  <p>Chame a gente no <a href="https://discord.gg/gc73gQfb5F">Discord</a>. Se o jogo fechar sozinho, no app use <b>Compartilhar logs</b> e mande o arquivo para a staff.</p>
+</main>
+</body>
+</html>
